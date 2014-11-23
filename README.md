@@ -14,3 +14,9 @@ cv-backgamon
     2. Add External Jar
     3. Select opencv-2410.jar from `C:\OpenCV\build\java`
 6. Compile and Run!
+
+
+Useful Resources
+================
+[Tutorials Point](http://www.tutorialspoint.com/java_dip/eroding_dilating.htm)
+Great site with a ton of references to OpenCV Java code. Link to reference article: "Eroding Dilating"
