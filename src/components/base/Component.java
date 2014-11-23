@@ -1,4 +1,4 @@
-package components;
+package components.base;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
@@ -11,10 +11,13 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.opencv.core.Mat;
+
 import javax.swing.JCheckBox;
 import javax.swing.JToggleButton;
+
 import net.miginfocom.swing.MigLayout;
 
+@SuppressWarnings("serial")
 public abstract class Component extends JPanel{
 	
 	private JPanel containerPanel = new JPanel(new BorderLayout());

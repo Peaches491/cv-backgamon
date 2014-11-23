@@ -7,6 +7,9 @@ import java.util.TreeMap;
 
 import org.opencv.core.Mat;
 
+import components.base.Component;
+
+@SuppressWarnings("serial")
 public class BoundingBoxComponent extends Component {
 	
 	public BoundingBoxComponent(){

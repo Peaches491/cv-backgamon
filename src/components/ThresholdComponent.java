@@ -1,6 +1,5 @@
 package components;
 
-import javax.swing.JLabel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
@@ -9,10 +8,12 @@ import javax.swing.event.ChangeListener;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
+import components.base.Component;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.SwingConstants;
 
+@SuppressWarnings("serial")
 public class ThresholdComponent extends Component {
 	private JSlider slider;
 	private JTextField textField;

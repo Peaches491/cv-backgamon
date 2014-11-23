@@ -11,6 +11,7 @@ import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("serial")
 public class ImageChannelPanel extends JPanel {
 
 	private ImagePanel RGBPanel;

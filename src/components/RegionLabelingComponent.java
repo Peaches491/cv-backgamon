@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -17,11 +16,13 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
+import components.base.Component;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+@SuppressWarnings("serial")
 public class RegionLabelingComponent extends Component {
 
 	private int unlabledLabel = 1;

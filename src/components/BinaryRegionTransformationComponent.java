@@ -3,11 +3,11 @@ package components;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
+import components.base.Component;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.JSpinner;
@@ -19,6 +19,7 @@ import javax.swing.JToggleButton;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 
+@SuppressWarnings("serial")
 public class BinaryRegionTransformationComponent extends Component implements ChangeListener {
 	
 	public enum Shape {

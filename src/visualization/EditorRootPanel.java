@@ -1,15 +1,11 @@
 package visualization;
 
-import java.awt.Container;
-import java.awt.Dimension;
-
 import javax.swing.JPanel;
 
 import org.opencv.core.Mat;
 
-import components.Component;
-import components.ComponentManager;
-import components.ThresholdComponent;
+import components.base.Component;
+import components.base.ComponentManager;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.JTabbedPane;
@@ -17,14 +13,13 @@ import javax.swing.JSlider;
 import javax.swing.JLabel;
 
 import java.awt.Font;
-import java.util.LinkedList;
 
-import javax.swing.JTextField;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
+@SuppressWarnings("serial")
 public class EditorRootPanel extends JPanel implements ChangeListener {
 	
 	private JSlider slider;

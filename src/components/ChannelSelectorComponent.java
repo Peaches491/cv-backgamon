@@ -5,17 +5,18 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JLabel;
-
 import net.miginfocom.swing.MigLayout;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
+import components.base.Component;
+
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 
+@SuppressWarnings("serial")
 public class ChannelSelectorComponent extends Component implements ActionListener {
 	
 	private enum ChannelType {
@@ -23,11 +24,9 @@ public class ChannelSelectorComponent extends Component implements ActionListene
 		Red("Red", 2),
 		Green("Green", 1),
 		Blue("Blue", 0);
-		private String name;
 		private int channelNumber;
 
 		private ChannelType(String name, int channelNumber) {
-			this.name = name;
 			this.channelNumber = channelNumber;
 		}
 	}

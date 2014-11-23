@@ -12,12 +12,11 @@ import org.opencv.highgui.Highgui;
 import components.BinaryRegionTransformationComponent;
 import components.BoundingBoxComponent;
 import components.ChannelSelectorComponent;
-import components.ComponentManager;
 import components.ContrastAdjustComponent;
 import components.RegionLabelingComponent;
 import components.ThresholdComponent;
+import components.base.ComponentManager;
 import visualization.EditorRootPanel;
-import visualization.ImagePanel;
 
 public class HelloOpenCV {
   public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {

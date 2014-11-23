@@ -1,9 +1,11 @@
 package components;
 
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
+import components.base.Component;
+
+@SuppressWarnings("serial")
 public class ContrastAdjustComponent extends Component {
 
 	public ContrastAdjustComponent(){
