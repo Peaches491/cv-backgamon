@@ -22,11 +22,6 @@ public class HelloOpenCV {
   public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
     System.out.println("Hello, OpenCV");
 
-    System.out.println("Winsor has committed some crap");
-
-    
-    
-    
     ClassLoader loader = Thread.currentThread().getContextClassLoader();
     System.out.println(loader.getResource("lena1.png"));
 //    System.out.println(loader.getResource("/lena1.png"));
