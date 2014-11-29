@@ -16,14 +16,14 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
-import components.base.Component;
+import components.base.DataComponent;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
-public class RegionLabelingComponent extends Component {
+public class RegionLabelingComponent extends DataComponent {
 
 	private int unlabledLabel = 1;
 	private int currentLabel = 2;
@@ -31,7 +31,7 @@ public class RegionLabelingComponent extends Component {
 	private Map<Double, TreeSet<Double> > collisionMap = new HashMap<Double, TreeSet<Double>>();
 	private HashMap<Double, Double> orderedReplacementMap = new HashMap<Double, Double>();
 	
-	private Mat labelMat = new Mat();
+	private Mat labelMat = null;
 	private JTextField textField;
 	
 	public RegionLabelingComponent() {
@@ -41,6 +41,8 @@ public class RegionLabelingComponent extends Component {
 		JLabel lblRegions = new JLabel("Regions:");
 		add(lblRegions, "cell 0 0,alignx trailing");
 		
+		// labelMat = new Mat();
+		 
 		textField = new JTextField();
 		textField.setEditable(false);
 		textField.setText("0");
@@ -49,7 +51,7 @@ public class RegionLabelingComponent extends Component {
 	}
 	
 	@Override
-	public void applyComponent(Mat inputMat) {
+	public void doApplyComponent(Mat inputMat) {
 		reset(inputMat);
 		
 		Imgproc.cvtColor(inputMat, inputMat, CvType.CV_8UC1);

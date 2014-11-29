@@ -50,6 +50,7 @@ public class ImagePanel extends JPanel{
 
 	public void setMat(Mat newMat) {
 		this.imageMat = newMat;
+		
 		recalculate();
 	}
 	

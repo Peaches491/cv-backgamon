@@ -13,80 +13,40 @@ import components.BinaryRegionTransformationComponent;
 import components.BoundingBoxComponent;
 import components.ChannelSelectorComponent;
 import components.ContrastAdjustComponent;
+import components.FileChooserComponent;
 import components.RegionLabelingComponent;
 import components.ThresholdComponent;
 import components.base.ComponentManager;
 import visualization.EditorRootPanel;
 
 public class HelloOpenCV {
-  public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
-    System.out.println("Hello, OpenCV");
+	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
 
-    ClassLoader loader = Thread.currentThread().getContextClassLoader();
-    System.out.println(loader.getResource("lena1.png"));
-//    System.out.println(loader.getResource("/lena1.png"));
-//    System.out.println(loader.getResource("resources/lena1.png"));
-//    System.out.println(loader.getResource("/resources/lena1.png"));
-    
-    String filename = "2014-11-14 14-19-46.798-crop.jpg";
-    String fullPath = "C:/Users/Daniel/Dropbox/School Stuff/Graduate/Computer Vision/CV Group Project/images/Dice/Random Rolls/" + filename;
-    
-    File f = new File(fullPath);
-    
-    String picPath = f.getAbsolutePath();
-    System.out.println(picPath);
+		System.out.println("Hello, OpenCV");
 
-//    f = new File(loader.getResource("test.gif").getPath().substring(1));
-//    picPath = f.getAbsolutePath();
-//    System.out.println(picPath);
-//    String detectorPath = loader.getResource("lbpcascade_frontalface.xml").getPath().substring(1);
-    
-    // Load the native library.
-    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-    final Mat faceMat= Highgui.imread(picPath);
-    
-    
-    ComponentManager compManager = new ComponentManager();
-    
-    final EditorRootPanel rootPanel = new EditorRootPanel(faceMat, compManager);
-    
-//    ChannelSelectorComponent channelSelector = new ChannelSelectorComponent();
-//    rootPanel.addComponent(channelSelector);
-//    
-//    ThresholdComponent thresh = new ThresholdComponent();
-//    rootPanel.addComponent(thresh);
-//    
-//    RegionLabelingComponent region = new RegionLabelingComponent();
-//    rootPanel.addComponent(region);
-//
-//    BoundingBoxComponent box = new BoundingBoxComponent();
-//    rootPanel.addComponent(box);
-//
-//    ContrastAdjustComponent contrast = new ContrastAdjustComponent();
-//    rootPanel.addComponent(contrast);
-    
-    
+		ComponentManager compManager = new ComponentManager();
 
-    UIManager.setLookAndFeel(
-            UIManager.getSystemLookAndFeelClassName());
-    
-    compManager.addComponent(new ChannelSelectorComponent());
+		final EditorRootPanel rootPanel = new EditorRootPanel(compManager);
 
-    compManager.addComponent(new ThresholdComponent(95));
-    compManager.addComponent(new BinaryRegionTransformationComponent(9, 5, BinaryRegionTransformationComponent.Shape.CIRCLE, true));
-    compManager.addComponent(new RegionLabelingComponent());
-    compManager.addComponent(new BoundingBoxComponent());
-    compManager.addComponent(new ContrastAdjustComponent());
-    
-    rootPanel.initialize();
-    
-    JFrame frame2 = new JFrame();
-    frame2.add(rootPanel);
-    frame2.setSize(828, 600);
-    frame2.setLocationRelativeTo(null);
-    frame2.setVisible(true);
+		compManager.addFileChooserComponent(new FileChooserComponent(rootPanel));
+		compManager.addComponent(new ChannelSelectorComponent());
+		compManager.addComponent(new ThresholdComponent(95));
+		compManager.addComponent(new BinaryRegionTransformationComponent(9, 5, BinaryRegionTransformationComponent.Shape.CIRCLE, true));
+		compManager.addComponent(new RegionLabelingComponent());
+		compManager.addComponent(new BoundingBoxComponent());
+		compManager.addComponent(new ContrastAdjustComponent());
 
-    
-    frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-  }
+		UIManager.setLookAndFeel(
+				UIManager.getSystemLookAndFeelClassName());
+
+		rootPanel.initialize();
+
+		JFrame frame2 = new JFrame();
+		frame2.add(rootPanel);
+		frame2.setSize(828, 600);
+		frame2.setLocationRelativeTo(null);
+		frame2.setVisible(true);
+
+		frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
 }

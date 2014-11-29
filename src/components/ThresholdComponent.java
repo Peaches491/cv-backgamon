@@ -8,13 +8,13 @@ import javax.swing.event.ChangeListener;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
-import components.base.Component;
+import components.base.DataComponent;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.SwingConstants;
 
 @SuppressWarnings("serial")
-public class ThresholdComponent extends Component {
+public class ThresholdComponent extends DataComponent {
 	private JSlider slider;
 	private JTextField textField;
 
@@ -43,7 +43,7 @@ public class ThresholdComponent extends Component {
 	}
 
 	@Override
-	public void applyComponent(Mat inputMat) {
+	public void doApplyComponent(Mat inputMat) {
 		Imgproc.threshold(inputMat, inputMat, slider.getValue() , 0xFFFFFF, Imgproc.THRESH_BINARY);
 	}
 }

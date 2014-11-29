@@ -7,7 +7,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
-import components.base.Component;
+import components.base.DataComponent;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.JSpinner;
@@ -20,7 +20,7 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 
 @SuppressWarnings("serial")
-public class BinaryRegionTransformationComponent extends Component implements ChangeListener {
+public class BinaryRegionTransformationComponent extends DataComponent implements ChangeListener {
 	
 	public enum Shape {
 		CIRCLE,
@@ -76,7 +76,7 @@ public class BinaryRegionTransformationComponent extends Component implements Ch
 	}
 
 	@Override
-	public void applyComponent(Mat inputMat) {
+	public void doApplyComponent(Mat inputMat) {
 
 		Integer dilateSize = (Integer) dilateSizeSpinner.getValue();
 		Integer erodeSize = (Integer) erodeSizeSpinner.getValue();

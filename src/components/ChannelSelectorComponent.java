@@ -11,13 +11,13 @@ import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
-import components.base.Component;
+import components.base.DataComponent;
 
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 
 @SuppressWarnings("serial")
-public class ChannelSelectorComponent extends Component implements ActionListener {
+public class ChannelSelectorComponent extends DataComponent implements ActionListener {
 	
 	private enum ChannelType {
 		Combined("Combined", -1),
@@ -46,8 +46,11 @@ public class ChannelSelectorComponent extends Component implements ActionListene
 	}
 
 	@Override
-	public void applyComponent(Mat inputMat) {
+	public void doApplyComponent(Mat inputMat) {
 		
+		if (inputMat == null) {
+			return;
+		}
 		ChannelType channelType = (ChannelType)spinner.getModel().getSelectedItem();
 		
 		if(channelType.channelNumber >= 0){
