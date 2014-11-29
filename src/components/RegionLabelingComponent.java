@@ -82,9 +82,9 @@ public class RegionLabelingComponent extends Component {
 				
 				if(newVal == null) newVal = intVec[0];
 				
-				if(orderedReplacementMap.containsKey(newVal)){
-					newVal = orderedReplacementMap.get(newVal);
-				}
+//				if(orderedReplacementMap.containsKey(newVal)){
+//					newVal = orderedReplacementMap.get(newVal);
+//				}
 				
 				labelMat.put(y, x, new double[] {newVal, newVal, newVal});
 				if(!regionSet.containsKey(newVal)) 
@@ -108,13 +108,13 @@ public class RegionLabelingComponent extends Component {
 				
 				Double newVal = finalRegionMap.get(intVec[0]);
 
-				labelMat.put(y, x, new double[] {newVal, newVal, newVal});
-				if(regionSet.containsKey(intVec[0])) {
-					if(intVec[0] != newVal){
-						regionSet.put(newVal, regionSet.get(intVec[0]));
-						regionSet.remove(intVec[0]);
-					}
-				}
+//				labelMat.put(y, x, new double[] {newVal, newVal, newVal});
+//				if(regionSet.containsKey(intVec[0])) {
+//					if(intVec[0] != newVal){
+//						regionSet.put(newVal, regionSet.get(intVec[0]));
+//						regionSet.remove(intVec[0]);
+//					}
+//				}
 			}
 		}
 		

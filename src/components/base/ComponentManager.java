@@ -20,7 +20,7 @@ public class ComponentManager {
 
 	public void initialize() {
 		components.getLast().setApply(true);
-		components.getLast().setVisualize(true);
+//		components.getLast().setVisualize(true);
 	}
 
 	public Collection<Component> getComponents() {
@@ -34,5 +34,5 @@ public class ComponentManager {
 	public Object getRegistryData(String dataKey) {
 		return dataRegistry.get(dataKey);
 	}
-	
+
 }

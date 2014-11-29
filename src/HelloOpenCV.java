@@ -28,8 +28,10 @@ public class HelloOpenCV {
 //    System.out.println(loader.getResource("resources/lena1.png"));
 //    System.out.println(loader.getResource("/resources/lena1.png"));
     
-    String filename = "2014-11-14 14-19-46.798-crop.jpg";
-    String fullPath = "C:/Users/Daniel/Dropbox/School Stuff/Graduate/Computer Vision/CV Group Project/images/Dice/Random Rolls/" + filename;
+    String filename = "Random Rolls/2014-11-14 14-19-46.798-crop.jpg";
+//    filename = "Random Rolls/2014-11-14 14-19-35.860-crop.jpg";
+    String dir = "C:/Users/Daniel/Dropbox/School Stuff/Graduate/Computer Vision/CV Group Project/images/Dice/";
+    String fullPath = dir + filename;
     
     File f = new File(fullPath);
     
@@ -43,12 +45,10 @@ public class HelloOpenCV {
     
     // Load the native library.
     System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-    final Mat faceMat= Highgui.imread(picPath);
-    
     
     ComponentManager compManager = new ComponentManager();
     
-    final EditorRootPanel rootPanel = new EditorRootPanel(faceMat, compManager);
+    final EditorRootPanel rootPanel = new EditorRootPanel(f, compManager, dir);
     
 //    ChannelSelectorComponent channelSelector = new ChannelSelectorComponent();
 //    rootPanel.addComponent(channelSelector);
@@ -72,10 +72,10 @@ public class HelloOpenCV {
     
     compManager.addComponent(new ChannelSelectorComponent());
 
-    compManager.addComponent(new ThresholdComponent(95));
+    compManager.addComponent(new ThresholdComponent(130));
     compManager.addComponent(new BinaryRegionTransformationComponent(9, 5, BinaryRegionTransformationComponent.Shape.CIRCLE, true));
     compManager.addComponent(new RegionLabelingComponent());
-    compManager.addComponent(new BoundingBoxComponent());
+    compManager.addComponent(new BoundingBoxComponent(0.4, 1.0, 550, 10000, 250, 10000, 0.25, 4));
     compManager.addComponent(new ContrastAdjustComponent());
     
     rootPanel.initialize();
@@ -84,9 +84,9 @@ public class HelloOpenCV {
     frame2.add(rootPanel);
     frame2.setSize(828, 600);
     frame2.setLocationRelativeTo(null);
+    frame2.setExtendedState(frame2.getExtendedState() | JFrame.MAXIMIZED_BOTH);
     frame2.setVisible(true);
 
-    
     frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
   }
 }
