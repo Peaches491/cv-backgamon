@@ -11,10 +11,10 @@ import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
-import components.base.Component;
+import components.base.DataComponent;
 
 @SuppressWarnings("serial")
-public class BoundingBoxComponent extends Component {
+public class BoundingBoxComponent extends DataComponent {
 	
 	class Region{
 		public int regionNumber = 0;
@@ -46,7 +46,7 @@ public class BoundingBoxComponent extends Component {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void applyComponent(Mat inputMat) {
+	public void doApplyComponent(Mat inputMat) {
 		
 //		Mat newMat = new Mat(inputMat.size(), CvType.CV_64FC3);
 		

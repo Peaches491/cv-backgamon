@@ -4,10 +4,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import components.FileChooserComponent;
+
 public class ComponentManager {
 	
 	private LinkedList<Component> components = new LinkedList<Component>();
 	private HashMap<String, Object> dataRegistry = new HashMap<String, Object>();
+	private FileChooserComponent fileChooserComponent;
 	
 	public ComponentManager() {
 		
@@ -17,7 +20,13 @@ public class ComponentManager {
 		components.add(comp);
 		comp.setManager(this);
 	}
-
+	
+	public void addFileChooserComponent(FileChooserComponent comp) {
+		fileChooserComponent = comp;
+		components.add(comp);
+		comp.setManager(this);
+	}
+	
 	public void initialize() {
 		components.getLast().setApply(true);
 		components.getLast().setVisualize(true);

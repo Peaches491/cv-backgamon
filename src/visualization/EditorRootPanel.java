@@ -2,9 +2,12 @@ package visualization;
 
 import javax.swing.JPanel;
 
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.highgui.Highgui;
 
 import components.base.Component;
+import components.base.DataComponent;
 import components.base.ComponentManager;
 import net.miginfocom.swing.MigLayout;
 
@@ -21,60 +24,71 @@ import javax.swing.ScrollPaneConstants;
 
 @SuppressWarnings("serial")
 public class EditorRootPanel extends JPanel implements ChangeListener {
-	
+
 	private JSlider slider;
 	private ImagePanel outputViewPanel;
 	private JScrollPane scrollPane;
 	private JPanel componentsPanel;
-	private Mat imageMat;
+	private Mat imageMat = null;
 	private JTabbedPane viewTabs;
 	private ComponentManager compManager;
 
 	public EditorRootPanel(){
 		super();
-		
+
 		setLayout(new MigLayout("fill", "[grow,fill][fill]", "[grow]"));
-		
+
 		viewTabs = new JTabbedPane(JTabbedPane.TOP);
 		add(viewTabs, "cell 0 0,grow");
-		
+
 		outputViewPanel = new ImagePanel();
 		viewTabs.addTab("Output", null, outputViewPanel, null);
-		
+
 		scrollPane = new JScrollPane();
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		add(scrollPane, "cell 1 0,grow");
-		
+
 		componentsPanel = new JPanel();
 		scrollPane.setViewportView(componentsPanel);
 		componentsPanel.setLayout(new MigLayout("fillx, flowy", "[grow, fill]", ""));
-		
+
 
 		JLabel lblThreshold = new JLabel("Components Panel");
 		lblThreshold.setFont(new Font("Tahoma", Font.BOLD, 12));
 		componentsPanel.add(lblThreshold);
 	}
-	
-	public EditorRootPanel(Mat displayMat, ComponentManager compManager){
+
+	public EditorRootPanel(ComponentManager compManager){
 		this();
-		this.imageMat = displayMat;
-		outputViewPanel.setMat(displayMat);
 		this.compManager = compManager;
+	}
+
+	public void setDisplayMat(Mat displayMat) {
+		this.imageMat = displayMat;
+		if (displayMat != null) {
+			outputViewPanel.setMat(displayMat);
+		}
 	}
 
 	public JSlider getThresholdSlider() {
 		return slider;
 	}
-	
+
 	public void updateView() {
 		outputViewPanel.recalculate();
 	}
-	
+
 	public void stateChanged(ChangeEvent e) {
 		int oldIdx = viewTabs.getSelectedIndex();
 		viewTabs.removeAll();
+
+		if (imageMat == null) {
+			return;
+		}
+
 		Mat localMat = imageMat.clone();
+
 		for(Component comp : compManager.getComponents()){
 			if(comp.isApplyEnabled()){
 				comp.applyComponent(localMat);
@@ -95,12 +109,12 @@ public class EditorRootPanel extends JPanel implements ChangeListener {
 
 	public void initialize() {
 		compManager.initialize();
-		
+
 		for(Component c : compManager.getComponents()){
 			componentsPanel.add(c.getControlPanel());
 			c.addChangeListener(this);
 		}
-		
+
 		repaint();
 		stateChanged(null);
 	}
