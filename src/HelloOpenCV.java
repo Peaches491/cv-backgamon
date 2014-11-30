@@ -13,6 +13,7 @@ import components.BinaryRegionTransformationComponent;
 import components.BoundingBoxComponent;
 import components.ChannelSelectorComponent;
 import components.ContrastAdjustComponent;
+import components.NNComponent;
 import components.RegionLabelingComponent;
 import components.ThresholdComponent;
 import components.base.ComponentManager;
@@ -77,6 +78,8 @@ public class HelloOpenCV {
     compManager.addComponent(new RegionLabelingComponent());
     compManager.addComponent(new BoundingBoxComponent(0.4, 1.0, 550, 10000, 250, 10000, 0.25, 4));
     compManager.addComponent(new ContrastAdjustComponent());
+//    compManager.addComponent(new TrainImageSaverComponent());
+//    compManager.addComponent(new NNComponent());
     
     rootPanel.initialize();
     
