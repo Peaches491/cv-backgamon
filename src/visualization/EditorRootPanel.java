@@ -106,11 +106,13 @@ public class EditorRootPanel extends JPanel implements ChangeListener {
 	}
 	
 	protected void setImageFile(File picFile) {
-		Mat displayMat = Highgui.imread(picFile.getAbsolutePath());
-		System.out.println("New Mat: " + displayMat);
-		this.imageMat = displayMat;
-		outputViewPanel.setMat(displayMat);
-		stateChanged(null);
+		if(picFile != null){
+			Mat displayMat = Highgui.imread(picFile.getAbsolutePath());
+			System.out.println("New Mat: " + displayMat);
+			this.imageMat = displayMat;
+			outputViewPanel.setMat(displayMat);
+			stateChanged(null);
+		}
 	}
 
 	public void updateView() {
@@ -118,34 +120,36 @@ public class EditorRootPanel extends JPanel implements ChangeListener {
 	}
 	
 	public void stateChanged(ChangeEvent e) {
-		int oldIdx = viewTabs.getSelectedIndex();
-		viewTabs.removeAll();
-		viewTabs.addTab("Output", null, outputViewPanel, null);
-		viewTabs.addTab("Overlay", null, overlayViewPanel, null);
+		if(imageMat != null){
+			int oldIdx = viewTabs.getSelectedIndex();
+			viewTabs.removeAll();
+			viewTabs.addTab("Output", null, outputViewPanel, null);
+			viewTabs.addTab("Overlay", null, overlayViewPanel, null);
 		
-		Mat localMat = imageMat.clone();
-		Mat overlayMat = imageMat.clone();
-		compManager.setRegistryData("OVERLAY_MAT", new Mat(imageMat.height(), imageMat.width(), CvType.CV_8UC3));
-		
-		for(Component comp : compManager.getComponents()){
-			if(comp.isApplyEnabled()){
-				comp.applyComponent(localMat);
-//				System.out.println(CvType.typeToString(localMat.type()));
-				if(comp.shouldVisualize()){
-					addVisual(comp.getTitle(), localMat);
+			Mat localMat = imageMat.clone();
+			Mat overlayMat = imageMat.clone();
+			compManager.setRegistryData("OVERLAY_MAT", new Mat(imageMat.height(), imageMat.width(), CvType.CV_8UC3));
+			
+			for(Component comp : compManager.getComponents()){
+				if(comp.isApplyEnabled()){
+					comp.applyComponent(localMat);
+	//				System.out.println(CvType.typeToString(localMat.type()));
+					if(comp.shouldVisualize()){
+						addVisual(comp.getTitle(), localMat);
+					}
 				}
 			}
+			Mat overlay = (Mat)compManager.getRegistryData("OVERLAY_MAT");
+			System.out.println(localMat);
+			System.out.println(overlay);
+	
+			Core.add(localMat, overlay, localMat);
+			Core.add(overlayMat, overlay, overlayMat);
+			
+			outputViewPanel.setMat(localMat);
+			overlayViewPanel.setMat(overlayMat);
+			viewTabs.setSelectedIndex(Math.min(viewTabs.getTabCount()-1, oldIdx));
 		}
-		Mat overlay = (Mat)compManager.getRegistryData("OVERLAY_MAT");
-		System.out.println(localMat);
-		System.out.println(overlay);
-
-		Core.add(localMat, overlay, localMat);
-		Core.add(overlayMat, overlay, overlayMat);
-		
-		outputViewPanel.setMat(localMat);
-		overlayViewPanel.setMat(overlayMat);
-		viewTabs.setSelectedIndex(Math.min(viewTabs.getTabCount()-1, oldIdx));
 	}
 
 	private void addVisual(String title, Mat localMat) {

@@ -158,7 +158,7 @@ public class ImagePanel extends JPanel implements MouseMotionListener{
 		Point p = e.getPoint();
 		Point imageOrigin = getImageLoc();
 		
-		if(p != null){
+		if(p != null && bufImage != null){
 			Point imagePixel = new Point(p);
 			imagePixel.x -= imageOrigin.x;
 			imagePixel.y -= imageOrigin.y;
