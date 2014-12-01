@@ -39,8 +39,6 @@ public class WarpAffineComponent extends Component implements ChangeListener {
 	private JSlider angleSlider;
 	private JSlider scaleSlider;
 
-	Mat rotationMat;
-
 	public WarpAffineComponent(){
 		this.setLayout(new MigLayout("fillx", "[grow][]", "[][]"));
 
@@ -63,7 +61,7 @@ public class WarpAffineComponent extends Component implements ChangeListener {
 		});
 		centerSliderX.setMinimum(0);
 		centerSliderX.setMaximum(100);
-		centerSliderX.setValue(50);
+		centerSliderX.setValue(0);
 		this.add(centerSliderX, "cell 1 0,grow");
 
 
@@ -84,7 +82,7 @@ public class WarpAffineComponent extends Component implements ChangeListener {
 		});
 		centerSliderY.setMinimum(0);
 		centerSliderY.setMaximum(100);
-		centerSliderY.setValue(50);
+		centerSliderY.setValue(0);
 		this.add(centerSliderY, "cell 1 1,grow");
 
 
@@ -123,9 +121,9 @@ public class WarpAffineComponent extends Component implements ChangeListener {
 				notifyChange();
 			}
 		});
-		scaleSlider.setMinimum(1);
-		scaleSlider.setMaximum(3);
-		scaleSlider.setValue(1);
+		scaleSlider.setMinimum(50);
+		scaleSlider.setMaximum(200);
+		scaleSlider.setValue(100);
 		this.add(scaleSlider, "cell 1 3,grow");
 	}
 
@@ -145,8 +143,8 @@ public class WarpAffineComponent extends Component implements ChangeListener {
 
 		Mat rotationMat = getRotationMatrix2D(
 				theCenter,
-				angleSlider.getValue(),
-				scaleSlider.getValue());
+				(double)angleSlider.getValue(),
+				(double)scaleSlider.getValue()/100.0);
 
 		warpAffine(inputMat, inputMat, rotationMat, inputMat.size());
 		//	warpPerspective(inMat, inputMat, rotationMat, inputMat.size());
@@ -189,6 +187,15 @@ public class WarpAffineComponent extends Component implements ChangeListener {
 		Imgproc.warpAffine( src,  dst,  M,  dsize,  flags,  borderMode,  borderValue);
 	}
 
+	
+	
+	/*
+	 * Calculates a perspective transform from four pairs of the corresponding points.
+	 */
+	static Mat	getPerspectiveTransform(Mat src, Mat dst) {
+		return Imgproc.getPerspectiveTransform( src,  dst);
+	}
+	
 	/*
 	 * Applies a perspective transformation to an image.
 	 */

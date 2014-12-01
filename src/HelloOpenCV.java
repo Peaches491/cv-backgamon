@@ -21,6 +21,7 @@ import components.ContrastAdjustComponent;
 import components.RegionLabelingComponent;
 import components.ThresholdComponent;
 import components.WarpAffineComponent;
+import components.WarpPerspectiveComponent;
 import components.base.ComponentManager;
 import visualization.EditorRootPanel;
 
@@ -146,6 +147,7 @@ public class HelloOpenCV {
 		// compManager.addComponent(new TrainImageSaverComponent());
 		// compManager.addComponent(new NNComponent());
 		compManager.addComponent(new WarpAffineComponent());
+	//	compManager.addComponent(new WarpPerspectiveComponent());
 
 		rootPanel.initialize();
 
