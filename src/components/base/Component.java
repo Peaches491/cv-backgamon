@@ -41,7 +41,7 @@ public abstract class Component extends JPanel{
 		containerPanel.add(enablePanel, BorderLayout.SOUTH);
 		enablePanel.setLayout(new MigLayout("fill", "[fill, grow][]", "[]"));
 		
-		btnEnable = new JToggleButton("Enabled");
+		btnEnable = new JToggleButton("Disabled");
 		btnEnable.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				if(btnEnable.isSelected()){
@@ -51,7 +51,7 @@ public abstract class Component extends JPanel{
 				}
 			}
 		});
-		btnEnable.setSelected(true);
+		btnEnable.setSelected(false);
 		btnEnable.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				notifyChange();

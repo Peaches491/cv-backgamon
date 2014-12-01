@@ -18,7 +18,7 @@ import javax.swing.DefaultComboBoxModel;
 
 @SuppressWarnings("serial")
 public class ChannelSelectorComponent extends Component implements ActionListener {
-	
+
 	private enum ChannelType {
 		Combined("Combined", -1),
 		Red("Red", 2),
@@ -32,12 +32,13 @@ public class ChannelSelectorComponent extends Component implements ActionListene
 	}
 
 	private JComboBox<ChannelType> spinner;
-	
+
 	public ChannelSelectorComponent(){
+		super();
+
 		this.setLayout(new MigLayout("fillx", "[grow]", "[][]"));
-		
 		this.setTitle("Channel Select");
-		
+
 		spinner = new JComboBox<ChannelType>();
 		spinner.setModel(new DefaultComboBoxModel<ChannelType>(ChannelType.values()));
 		spinner.setSelectedIndex(1);
@@ -47,19 +48,19 @@ public class ChannelSelectorComponent extends Component implements ActionListene
 
 	@Override
 	public void applyComponent(Mat inputMat) {
-		
+
 		ChannelType channelType = (ChannelType)spinner.getModel().getSelectedItem();
-		
+
 		if(channelType.channelNumber >= 0){
 			List<Mat> lRgb = new ArrayList<Mat>(3);
-		    Core.split(inputMat, lRgb);
-		    
-		    Imgproc.cvtColor(lRgb.get(channelType.channelNumber), 
-		    		lRgb.get(channelType.channelNumber), 
-		    		Imgproc.COLOR_GRAY2BGR);
-		    
-		    
-		    lRgb.get(channelType.channelNumber).assignTo(inputMat);
+			Core.split(inputMat, lRgb);
+
+			Imgproc.cvtColor(lRgb.get(channelType.channelNumber), 
+					lRgb.get(channelType.channelNumber), 
+					Imgproc.COLOR_GRAY2BGR);
+
+
+			lRgb.get(channelType.channelNumber).assignTo(inputMat);
 		}
 	}
 

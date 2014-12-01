@@ -10,6 +10,7 @@ import components.base.Component;
 public class NNComponent extends Component {
 
 	public NNComponent(){
+		super();
 		setTitle("Neural Net");
 	}
 	

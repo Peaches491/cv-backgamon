@@ -13,6 +13,7 @@ import components.base.Component;
 public class ContrastAdjustComponent extends Component {
 
 	public ContrastAdjustComponent(){
+		super();
 		this.setTitle("Contrast Adj.");
 	}
 	

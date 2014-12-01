@@ -19,7 +19,7 @@ public class ComponentManager {
 	}
 
 	public void initialize() {
-		components.getLast().setApply(true);
+//		components.getLast().setApply(true);
 //		components.getLast().setVisualize(true);
 	}
 

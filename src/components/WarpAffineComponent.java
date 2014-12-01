@@ -40,8 +40,9 @@ public class WarpAffineComponent extends Component implements ChangeListener {
 	private JSlider scaleSlider;
 
 	public WarpAffineComponent(){
-		this.setLayout(new MigLayout("fillx", "[grow][]", "[][]"));
+		super();
 
+		this.setLayout(new MigLayout("fillx", "[grow][]", "[][]"));
 		this.setTitle("WarpAffine");
 
 		// centerX
@@ -117,7 +118,7 @@ public class WarpAffineComponent extends Component implements ChangeListener {
 		scaleSlider = new JSlider();
 		scaleSlider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				tfs.setText("Scale " + scaleSlider.getValue() + "x");
+				tfs.setText("Scale " + scaleSlider.getValue() + "%");
 				notifyChange();
 			}
 		});

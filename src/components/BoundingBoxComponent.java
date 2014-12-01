@@ -75,6 +75,8 @@ public class BoundingBoxComponent extends Component implements ChangeListener {
 	}
 	
 	public BoundingBoxComponent(double minDensity, double maxDensity, int minArea, int maxArea, int minPixels, int maxPixels, double minAspect, double maxAspect){
+		super();
+		
 		this.setTitle("Bounding Boxes");
 		setLayout(new MigLayout("fill", "[right][grow,fill][grow,fill]", "[][][][][][]"));
 		

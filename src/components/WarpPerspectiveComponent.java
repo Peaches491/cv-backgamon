@@ -37,10 +37,10 @@ import javax.swing.SwingConstants;
 public class WarpPerspectiveComponent extends Component implements ChangeListener {
 
 	public WarpPerspectiveComponent(){
+		super();
+
 		this.setLayout(new MigLayout("fillx", "[grow][]", "[][]"));
-
 		this.setTitle("WarpPerspective");
-
 	}
 
 	@Override

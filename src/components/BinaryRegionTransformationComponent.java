@@ -36,6 +36,8 @@ public class BinaryRegionTransformationComponent extends Component implements Ch
 	private JLabel lblKernelShape;
 	
 	public BinaryRegionTransformationComponent(int dilateSize, int erodeSize, Shape kernelShape, boolean setOpening) {
+		super();
+		
 		setTitle("Region Operations");
 		setLayout(new MigLayout("fill", "[][grow,fill]", "[][][][]"));
 		

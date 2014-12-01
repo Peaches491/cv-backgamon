@@ -32,10 +32,10 @@ public class HelloOpenCV {
 		hFormat.printHelp("HelloOpenCV", opt);
 		System.exit(-1);
 	}
-	
+
 	public static void main(String[] args) throws ClassNotFoundException,
-			InstantiationException, IllegalAccessException,
-			UnsupportedLookAndFeelException {
+	InstantiationException, IllegalAccessException,
+	UnsupportedLookAndFeelException {
 		System.out.println("Hello, OpenCV!");
 
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -73,7 +73,7 @@ public class HelloOpenCV {
 				helpAndExit(opt);
 			}
 		}
-		
+
 		if (img != null) {
 			if(img.isDirectory()) {
 				System.err.println("Specified image path " + img.getPath() + " does not point to a file! Exiting.");
@@ -88,10 +88,10 @@ public class HelloOpenCV {
 		if(dir == null && img == null) {
 			JFileChooser fChoose = new JFileChooser();
 			fChoose.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-	
+
 			int fileChooseResult = fChoose.showDialog(null,
 					"Select Directory");
-	
+
 			switch (fileChooseResult) {
 			case JFileChooser.APPROVE_OPTION:
 				System.out.println("Approved!");
@@ -99,7 +99,7 @@ public class HelloOpenCV {
 				break;
 			case JFileChooser.ERROR_OPTION:
 				System.err
-						.println("Error occurred opening selected file or folder. Exiting. ");
+				.println("Error occurred opening selected file or folder. Exiting. ");
 				System.exit(1);
 			case JFileChooser.CANCEL_OPTION:
 				System.err.println("File selection cancelled. Exiting. ");
@@ -146,6 +146,7 @@ public class HelloOpenCV {
 		compManager.addComponent(new ContrastAdjustComponent());
 		// compManager.addComponent(new TrainImageSaverComponent());
 		// compManager.addComponent(new NNComponent());
+
 		compManager.addComponent(new WarpAffineComponent());
 	//	compManager.addComponent(new WarpPerspectiveComponent());
 
