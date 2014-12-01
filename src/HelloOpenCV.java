@@ -20,6 +20,7 @@ import components.ChannelSelectorComponent;
 import components.ContrastAdjustComponent;
 import components.RegionLabelingComponent;
 import components.ThresholdComponent;
+import components.WarpAffineComponent;
 import components.base.ComponentManager;
 import visualization.EditorRootPanel;
 
@@ -144,6 +145,7 @@ public class HelloOpenCV {
 		compManager.addComponent(new ContrastAdjustComponent());
 		// compManager.addComponent(new TrainImageSaverComponent());
 		// compManager.addComponent(new NNComponent());
+		compManager.addComponent(new WarpAffineComponent());
 
 		rootPanel.initialize();
 
