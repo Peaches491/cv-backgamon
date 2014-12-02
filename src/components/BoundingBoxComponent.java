@@ -24,7 +24,7 @@ import javax.swing.SwingConstants;
 
 @SuppressWarnings("serial")
 public class BoundingBoxComponent extends Component implements ChangeListener {
-	
+
 	class Region{
 		public int regionNumber = 0;
 		public int minX = Integer.MAX_VALUE;
@@ -69,80 +69,80 @@ public class BoundingBoxComponent extends Component implements ChangeListener {
 	private JLabel lblFillRatio;
 	private JSpinner spinnerMinDensity;
 	private JSpinner spinnerMaxDensity;
-	
+
 	public BoundingBoxComponent(){
 		this(0, 1, 0, Integer.MAX_VALUE, 0, Integer.MAX_VALUE, 0.001, 5000);
 	}
-	
+
 	public BoundingBoxComponent(double minDensity, double maxDensity, int minArea, int maxArea, int minPixels, int maxPixels, double minAspect, double maxAspect){
 		super();
-		
+
 		this.setTitle("Bounding Boxes");
 		setLayout(new MigLayout("fill", "[right][grow,fill][grow,fill]", "[][][][][][]"));
-		
+
 		lblMinimum = new JLabel("Minimum");
 		lblMinimum.setHorizontalAlignment(SwingConstants.CENTER);
 		add(lblMinimum, "cell 1 0");
-		
+
 		lblMaximum = new JLabel("Maximum");
 		lblMaximum.setHorizontalAlignment(SwingConstants.CENTER);
 		add(lblMaximum, "cell 2 0");
-		
+
 		lblFillRatio = new JLabel("Fill Ratio");
 		add(lblFillRatio, "cell 0 1");
-		
+
 		spinnerMinDensity = new JSpinner();
 		spinnerMinDensity.setModel(new SpinnerNumberModel(new Double(minDensity), new Double(0), new Double(1), new Double(0.1)));
 		add(spinnerMinDensity, "cell 1 1");
 		spinnerMinDensity.addChangeListener(this);
-		
+
 		spinnerMaxDensity = new JSpinner();
 		spinnerMaxDensity.setModel(new SpinnerNumberModel(new Double(maxDensity), new Double(0), new Double(1), new Double(0.1)));
 		add(spinnerMaxDensity, "cell 2 1");
 		spinnerMaxDensity.addChangeListener(this);
-		
+
 		lblBoundingArea = new JLabel("Bounding Area");
 		add(lblBoundingArea, "cell 0 2");
-		
+
 		spinnerMinBox = new JSpinner();
 		spinnerMinBox.setModel(new SpinnerNumberModel(new Integer(minArea), new Integer(0), null, new Integer(1)));
 		add(spinnerMinBox, "cell 1 2");
 		spinnerMinBox.addChangeListener(this);
-		
+
 		spinnerMaxBox = new JSpinner();
 		spinnerMaxBox.setModel(new SpinnerNumberModel(new Integer(maxArea), new Integer(0), null, new Integer(1)));
 		add(spinnerMaxBox, "cell 2 2");
 		spinnerMaxBox.addChangeListener(this);
-		
+
 		JLabel lblPixels = new JLabel("Pixels");
 		add(lblPixels, "cell 0 3");
-		
+
 		spinnerMinPixels = new JSpinner();
 		spinnerMinPixels.setModel(new SpinnerNumberModel(new Integer(minPixels), new Integer(0), null, new Integer(1)));
 		add(spinnerMinPixels, "cell 1 3");
 		spinnerMinPixels.addChangeListener(this);
-		
+
 		spinnerMaxPixels = new JSpinner();
 		spinnerMaxPixels.setModel(new SpinnerNumberModel(new Integer(maxPixels), new Integer(0), null, new Integer(1)));
 		add(spinnerMaxPixels, "cell 2 3");
 		spinnerMaxPixels.addChangeListener(this);
-		
+
 		JLabel lblAspect = new JLabel("Aspect");
 		add(lblAspect, "cell 0 4");
-		
+
 		spinnerMinAspect = new JSpinner();
 		spinnerMinAspect.setModel(new SpinnerNumberModel(new Double(minAspect), new Double(0.001), null, new Double(0.1)));
 		add(spinnerMinAspect, "cell 1 4");
 		spinnerMinAspect.addChangeListener(this);
-		
+
 		spinnerMaxAspect = new JSpinner();
 		spinnerMaxAspect.setModel(new SpinnerNumberModel(new Double(maxAspect), new Double(0.001), null, new Double(0.1)));
 		add(spinnerMaxAspect, "cell 2 4");
 		spinnerMaxAspect.addChangeListener(this);
-		
+
 		lblRegions = new JLabel("Regions");
 		add(lblRegions, "cell 0 5,alignx trailing");
-		
+
 		regionsField = new JTextField();
 		regionsField.setHorizontalAlignment(SwingConstants.TRAILING);
 		regionsField.setText("1");
@@ -154,20 +154,26 @@ public class BoundingBoxComponent extends Component implements ChangeListener {
 	@Override
 	@SuppressWarnings("unchecked")
 	public void applyComponent(Mat inputMat) {
-		
-//		Mat newMat = new Mat(inputMat.size(), CvType.CV_64FC3);
-		
-//		System.out.println(CvType.typeToString(inputMat.type()));
-//		Imgproc.cvtColor(inputMat, newMat, Imgproc.COLOR_GRAY2BGR);
-//		System.out.println(CvType.typeToString(inputMat.type()));
+
+		//		Mat newMat = new Mat(inputMat.size(), CvType.CV_64FC3);
+
+		//		System.out.println(CvType.typeToString(inputMat.type()));
+		//		Imgproc.cvtColor(inputMat, newMat, Imgproc.COLOR_GRAY2BGR);
+		//		System.out.println(CvType.typeToString(inputMat.type()));
 
 		TreeMap<Double, ArrayList<Point>> regions = (TreeMap<Double, ArrayList<Point>>) componentManager.getRegistryData("REGION_SET");
-		
+
+		// if there are no regions defined...
+		if (regions == null) {
+			System.err.println("in BoundingBoxComponent::applyComponent: no regions defined");
+			return;	
+		}
+
 		ArrayList<Region> regionBounds = new ArrayList<Region>(regions.size());
 		for(Entry<Double, ArrayList<Point>> e : regions.entrySet()){
 			if(e.getValue().size() < (int)spinnerMinPixels.getValue()) continue;
 			if(e.getValue().size() > (int)spinnerMaxPixels.getValue()) continue;
-			
+
 			Region r = new Region();
 			r.regionNumber = e.getKey().intValue();
 			for(Point p : e.getValue()){
@@ -184,21 +190,21 @@ public class BoundingBoxComponent extends Component implements ChangeListener {
 
 			if(aspect < (double)spinnerMinAspect.getValue()) continue;
 			if(aspect > (double)spinnerMaxAspect.getValue()) continue;
-			
+
 			if(dim.width*dim.height < (int)spinnerMinBox.getValue()) continue;
 			if(dim.width*dim.height > (int)spinnerMaxBox.getValue()) continue;
 
 			if(e.getValue().size() / ((double)dim.width*dim.height) < (double)spinnerMinDensity.getValue()) continue;
 			if(e.getValue().size() / ((double)dim.width*dim.height) > (double)spinnerMaxDensity.getValue()) continue;
-			
+
 			regionBounds.add(r);
 		}
-		
+
 		for(Region r : regionBounds){
 			Core.rectangle((Mat)componentManager.getRegistryData("OVERLAY_MAT"), r.getMinPoint(), r.getMaxPoint(), new Scalar(0, 0, 255));
 			Core.putText((Mat)componentManager.getRegistryData("OVERLAY_MAT"), ""+r.pixelCount, r.getMaxPoint(), Core.FONT_HERSHEY_DUPLEX, 0.5,  new Scalar(255, 255, 255), 1, Core.LINE_AA, false);
 		}
-		
+
 		regionsField.setText("" + regionBounds.size());
 	}
 

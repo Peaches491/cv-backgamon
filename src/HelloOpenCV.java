@@ -148,7 +148,7 @@ public class HelloOpenCV {
 		// compManager.addComponent(new NNComponent());
 
 		compManager.addComponent(new WarpAffineComponent());
-	//	compManager.addComponent(new WarpPerspectiveComponent());
+		compManager.addComponent(new WarpPerspectiveComponent());
 
 		rootPanel.initialize();
 
