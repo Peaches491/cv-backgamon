@@ -37,9 +37,11 @@ import javax.swing.SwingConstants;
 /*
  * performs a WarpPerspective transform
  * references:
+ * http://docs.opencv.org/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html#
  * http://docs.opencv.org/trunk/doc/tutorials/calib3d/real_time_pose/real_time_pose.html
  * http://docs.opencv.org/modules/imgproc/doc/geometric_transformations.html#Mat getPerspectiveTransform(InputArray src, InputArray dst)
  * http://stackoverflow.com/questions/17637730/android-opencv-getperspectivetransform-and-warpperspective
+*
  */
 public class WarpPerspectiveComponent extends Component implements ChangeListener {
 
@@ -214,6 +216,12 @@ public class WarpPerspectiveComponent extends Component implements ChangeListene
 		// generate the 3x3 perspective transform matrix
 		Mat perspectiveTransform=Imgproc.getPerspectiveTransform(src_mat, dst_mat);
 
+		//System.out.println("in WarpPerspectiveComponent...");
+		//System.out.println(perspectiveTransform.toString());
+		
+		
+		
+		
 		// copy the source image and apply the transform
 		Mat srcMat=ioMat.clone();
 		warpPerspective(srcMat, ioMat, perspectiveTransform, ioMat.size());
