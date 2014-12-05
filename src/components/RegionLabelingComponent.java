@@ -17,6 +17,7 @@ import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
 import components.base.Component;
+import components.base.ProcessInfo;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.JLabel;
@@ -49,10 +50,10 @@ public class RegionLabelingComponent extends Component {
 	}
 	
 	@Override
-	public void applyComponent(Mat inputMat) {
+	public void applyComponent(Mat inputMat, ProcessInfo info) {
 		reset(inputMat);
 		
-		Imgproc.cvtColor(inputMat, inputMat, CvType.CV_8UC1);
+//		Imgproc.cvtColor(inputMat, inputMat, Imgproc.COLOR_BGR2GRAY);
 		Imgproc.threshold(inputMat, inputMat, 0, 1, Imgproc.THRESH_BINARY);
 		
 		double width = labelMat.size().width;
@@ -64,6 +65,7 @@ public class RegionLabelingComponent extends Component {
 				if(intVec[0] == unlabledLabel ||
 				   intVec[1] == unlabledLabel ||
 				   intVec[2] == unlabledLabel) {
+//				if(intVec[0] == unlabledLabel) {
 					double l = updateCurrentLabel(inputMat, labelMat, x, y);
 					labelMat.put(y, x, new double[] {l, l, l});
 				}

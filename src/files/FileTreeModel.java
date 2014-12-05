@@ -1,6 +1,7 @@
 package files;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -11,7 +12,16 @@ import javax.swing.tree.TreePath;
 
 public class FileTreeModel implements TreeModel {
 	private String root; // The root identifier
-	private Vector<TreeModelListener> listeners = new Vector<TreeModelListener>(); // Declare the listeners vector
+	private Vector<TreeModelListener> listeners = new Vector<TreeModelListener>(); // Declare
+																					// the
+																					// listeners
+																					// vector
+	private FilenameFilter directoriesOnly = new FilenameFilter() {
+		@Override
+		public boolean accept(File current, String name) {
+			return new File(current, name).isDirectory();
+		}
+	};
 
 	public FileTreeModel() {
 	}
@@ -26,19 +36,16 @@ public class FileTreeModel implements TreeModel {
 
 	public Object getChild(Object parent, int index) {
 		File directory = (File) parent;
-		String[] directoryMembers = directory.list();
+		String[] directoryMembers = directory.list(directoriesOnly);
 		return (new File(directory, directoryMembers[index]));
 	}
 
 	public int getChildCount(Object parent) {
 		File fileSystemMember = (File) parent;
 		if (fileSystemMember.isDirectory()) {
-			String[] directoryMembers = fileSystemMember.list();
+			String[] directoryMembers = fileSystemMember.list(directoriesOnly);
 			return directoryMembers.length;
-		}
-
-		else {
-
+		} else {
 			return 0;
 		}
 	}
@@ -46,7 +53,7 @@ public class FileTreeModel implements TreeModel {
 	public int getIndexOfChild(Object parent, Object child) {
 		File directory = (File) parent;
 		File directoryMember = (File) child;
-		String[] directoryMemberNames = directory.list();
+		String[] directoryMemberNames = directory.list(directoriesOnly);
 		int result = -1;
 
 		for (int i = 0; i < directoryMemberNames.length; ++i) {
@@ -60,7 +67,8 @@ public class FileTreeModel implements TreeModel {
 	}
 
 	public boolean isLeaf(Object node) {
-		return ((File) node).isFile();
+		return ((File) node).isFile()
+				|| ((File) node).list(directoriesOnly).length == 0;
 	}
 
 	public void addTreeModelListener(TreeModelListener l) {

@@ -9,6 +9,7 @@ import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
 import components.base.Component;
+import components.base.ProcessInfo;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.SwingConstants;
@@ -43,7 +44,7 @@ public class ThresholdComponent extends Component {
 	}
 
 	@Override
-	public void applyComponent(Mat inputMat) {
+	public void applyComponent(Mat inputMat, ProcessInfo info) {
 		Imgproc.threshold(inputMat, inputMat, slider.getValue() , 0xFFFFFF, Imgproc.THRESH_BINARY);
 	}
 }

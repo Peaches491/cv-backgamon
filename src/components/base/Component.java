@@ -2,6 +2,8 @@ package components.base;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 
 import javax.swing.JLabel;
@@ -42,26 +44,24 @@ public abstract class Component extends JPanel{
 		enablePanel.setLayout(new MigLayout("fill", "[fill, grow][]", "[]"));
 		
 		btnEnable = new JToggleButton("Enabled");
-		btnEnable.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
+		btnEnable.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
 				if(btnEnable.isSelected()){
 					btnEnable.setText("Enabled");
 				} else {
 					btnEnable.setText("Disabled");
 				}
-			}
-		});
-		btnEnable.setSelected(true);
-		btnEnable.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
 				notifyChange();
 			}
 		});
+		btnEnable.setSelected(true);
 		enablePanel.add(btnEnable, "cell 0 0,alignx left,aligny top");
 		
 		chckBoxVisualize = new JCheckBox("Visualize");
-		chckBoxVisualize.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
+		chckBoxVisualize.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
 				notifyChange();
 			}
 		});
@@ -69,11 +69,11 @@ public abstract class Component extends JPanel{
 		
 	}
 
-	public abstract void applyComponent(Mat inputMat);
+	public abstract void applyComponent(Mat inputMat, ProcessInfo info);
 
-	public Mat processInput(Mat inputMat) {
+	public Mat processInput(Mat inputMat, ProcessInfo info) {
 		Mat output = inputMat.clone();
-		applyComponent(output);
+		applyComponent(output, info);
 		return output;
 	}
 	
@@ -118,4 +118,5 @@ public abstract class Component extends JPanel{
 	public void setManager(ComponentManager componentManager) {
 		this.componentManager = componentManager;
 	}
+
 }

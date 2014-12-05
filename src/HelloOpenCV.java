@@ -15,10 +15,12 @@ import org.apache.commons.cli.ParseException;
 import org.opencv.core.Core;
 
 import components.BinaryRegionTransformationComponent;
+import components.BinaryRegionTransformationComponent.Shape;
 import components.BoundingBoxComponent;
 import components.ChannelSelectorComponent;
 import components.ContrastAdjustComponent;
 import components.RegionLabelingComponent;
+import components.RegionSavingComponent;
 import components.ThresholdComponent;
 import components.base.ComponentManager;
 import visualization.EditorRootPanel;
@@ -117,42 +119,44 @@ public class HelloOpenCV {
 		final EditorRootPanel rootPanel = new EditorRootPanel(img, compManager,
 				dir.getAbsolutePath());
 
-		// ChannelSelectorComponent channelSelector = new
-		// ChannelSelectorComponent();
-		// rootPanel.addComponent(channelSelector);
-		//
-		// ThresholdComponent thresh = new ThresholdComponent();
-		// rootPanel.addComponent(thresh);
-		//
-		// RegionLabelingComponent region = new RegionLabelingComponent();
-		// rootPanel.addComponent(region);
-		//
-		// BoundingBoxComponent box = new BoundingBoxComponent();
-		// rootPanel.addComponent(box);
-		//
-		// ContrastAdjustComponent contrast = new ContrastAdjustComponent();
-		// rootPanel.addComponent(contrast);
+		compManager.addComponent(new ChannelSelectorComponent(1.0, 0.0, 0.1));
 
-		compManager.addComponent(new ChannelSelectorComponent());
-
-		compManager.addComponent(new ThresholdComponent(130));
-		compManager.addComponent(new BinaryRegionTransformationComponent(9, 5,
-				BinaryRegionTransformationComponent.Shape.CIRCLE, true));
+		compManager.addComponent(new ThresholdComponent(132));
+		compManager.addComponent(new BinaryRegionTransformationComponent(9, 5, Shape.CIRCLE, true));
 		compManager.addComponent(new RegionLabelingComponent());
-		compManager.addComponent(new BoundingBoxComponent(0.4, 1.0, 550, 10000,
-				250, 10000, 0.25, 4));
+		compManager.addComponent(new BoundingBoxComponent(0.5, 1.0, 550, 10000,
+				450, 10000, 0.25, 1.6));
 		compManager.addComponent(new ContrastAdjustComponent());
 		// compManager.addComponent(new TrainImageSaverComponent());
 		// compManager.addComponent(new NNComponent());
+		final RegionSavingComponent saver = new RegionSavingComponent(5, 64);
+		compManager.addComponent(saver);
 
 		rootPanel.initialize();
+		
+		rootPanel.getControllerPanel().setRunAction(new Runnable(){
+			@Override
+			public void run() {
+				while(rootPanel.hasNextFile()){
+					saver.save();
+					rootPanel.selectNextFile();
+					try {
+						Thread.sleep(50);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				saver.save();
+			}
+			
+		});
 
 		JFrame frame2 = new JFrame();
 		frame2.add(rootPanel);
 		frame2.setSize(828, 600);
 		frame2.setLocationRelativeTo(null);
-		frame2.setExtendedState(frame2.getExtendedState()
-				| JFrame.MAXIMIZED_BOTH);
+		frame2.setExtendedState(frame2.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 		frame2.setVisible(true);
 
 		frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

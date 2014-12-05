@@ -8,6 +8,7 @@ import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
 import components.base.Component;
+import components.base.ProcessInfo;
 
 @SuppressWarnings("serial")
 public class ContrastAdjustComponent extends Component {
@@ -17,7 +18,7 @@ public class ContrastAdjustComponent extends Component {
 	}
 	
 	@Override
-	public void applyComponent(Mat inputMat) {
+	public void applyComponent(Mat inputMat, ProcessInfo info) {
 
 		Imgproc.cvtColor(inputMat, inputMat, Imgproc.COLOR_BGR2YCrCb);
 		

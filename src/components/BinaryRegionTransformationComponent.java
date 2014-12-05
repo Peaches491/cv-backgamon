@@ -2,12 +2,15 @@ package components;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 import components.base.Component;
+import components.base.ProcessInfo;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.JSpinner;
@@ -20,7 +23,7 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 
 @SuppressWarnings("serial")
-public class BinaryRegionTransformationComponent extends Component implements ChangeListener {
+public class BinaryRegionTransformationComponent extends Component implements ItemListener, ChangeListener {
 	
 	public enum Shape {
 		CIRCLE,
@@ -36,7 +39,7 @@ public class BinaryRegionTransformationComponent extends Component implements Ch
 	private JLabel lblKernelShape;
 	
 	public BinaryRegionTransformationComponent(int dilateSize, int erodeSize, Shape kernelShape, boolean setOpening) {
-		setTitle("Region Operations");
+		setTitle("Binary Operations");
 		setLayout(new MigLayout("fill", "[][grow,fill]", "[][][][]"));
 		
 		JLabel lblNewLabel = new JLabel("Dilate Size");
@@ -59,15 +62,16 @@ public class BinaryRegionTransformationComponent extends Component implements Ch
 		
 		chckbxNewCheckBox = new JToggleButton("Opening");
 		chckbxNewCheckBox.setSelected(true);
-		chckbxNewCheckBox.addChangeListener(this);
+		chckbxNewCheckBox.addItemListener(this);
 		
 		lblKernelShape = new JLabel("Kernel Shape");
 		add(lblKernelShape, "cell 0 2,alignx trailing");
 		
 		comboBox = new JComboBox<Shape>();
 		comboBox.setModel(new DefaultComboBoxModel<Shape>(Shape.values()));
-		comboBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		comboBox.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
 				notifyChange();
 			}
 		});
@@ -76,7 +80,7 @@ public class BinaryRegionTransformationComponent extends Component implements Ch
 	}
 
 	@Override
-	public void applyComponent(Mat inputMat) {
+	public void applyComponent(Mat inputMat, ProcessInfo info) {
 
 		Integer dilateSize = (Integer) dilateSizeSpinner.getValue();
 		Integer erodeSize = (Integer) erodeSizeSpinner.getValue();
@@ -111,7 +115,8 @@ public class BinaryRegionTransformationComponent extends Component implements Ch
 		}
 	}
 
-	public void stateChanged(ChangeEvent e) {
+	@Override
+	public void itemStateChanged(ItemEvent e) {
 		if(e.getSource().equals(chckbxNewCheckBox)){
 			if(!chckbxNewCheckBox.isSelected()){
 				chckbxNewCheckBox.setText("Closing");
@@ -119,6 +124,11 @@ public class BinaryRegionTransformationComponent extends Component implements Ch
 				chckbxNewCheckBox.setText("Opening");
 			}
 		}
+		this.notifyChange();
+	}
+
+	@Override
+	public void stateChanged(ChangeEvent e) {
 		this.notifyChange();
 	}
 

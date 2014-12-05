@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.byteground:byteground-opencv_2.10:0.3.0">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/byteground/byteground-opencv_2.10/0.3.0/byteground-opencv_2.10-0.3.0.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/byteground/byteground-opencv_2.10/0.3.0/byteground-opencv_2.10-0.3.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/byteground/byteground-opencv_2.10/0.3.0/byteground-opencv_2.10-0.3.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

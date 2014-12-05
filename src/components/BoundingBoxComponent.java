@@ -7,11 +7,11 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import org.opencv.core.Core;
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
 
 import components.base.Component;
+import components.base.ProcessInfo;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.JLabel;
@@ -151,7 +151,7 @@ public class BoundingBoxComponent extends Component implements ChangeListener {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void applyComponent(Mat inputMat) {
+	public void applyComponent(Mat inputMat, ProcessInfo info) {
 		
 //		Mat newMat = new Mat(inputMat.size(), CvType.CV_64FC3);
 		
@@ -193,9 +193,12 @@ public class BoundingBoxComponent extends Component implements ChangeListener {
 		}
 		
 		for(Region r : regionBounds){
-			Core.rectangle((Mat)componentManager.getRegistryData("OVERLAY_MAT"), r.getMinPoint(), r.getMaxPoint(), new Scalar(0, 0, 255));
-			Core.putText((Mat)componentManager.getRegistryData("OVERLAY_MAT"), ""+r.pixelCount, r.getMaxPoint(), Core.FONT_HERSHEY_DUPLEX, 0.5,  new Scalar(255, 255, 255), 1, Core.LINE_AA, false);
+			Core.rectangle(info.getOverlayMat(), r.getMinPoint(), r.getMaxPoint(), new Scalar(0, 0, 255));
+			Core.putText(info.getOverlayMat(), ""+r.pixelCount, r.getMaxPoint(), Core.FONT_HERSHEY_DUPLEX, 0.5, 
+					new Scalar(255, 255, 255), 1, Core.LINE_AA, false);
 		}
+		
+		componentManager.setRegistryData("REGION_OBJS", regionBounds);
 		
 		regionsField.setText("" + regionBounds.size());
 	}
