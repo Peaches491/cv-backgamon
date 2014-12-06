@@ -20,17 +20,18 @@ public class ThresholdComponent extends Component {
 	private JTextField textField;
 
 	public ThresholdComponent(int sliderVal){
+		super();
+
 		this.setLayout(new MigLayout("fillx", "[grow][]", "[][]"));
-		
 		this.setTitle("Threshold");
-		
+
 		textField = new JTextField();
 		textField.setHorizontalAlignment(SwingConstants.CENTER);
 		textField.setEditable(false);
 		textField.setText("" + sliderVal);
 		this.add(textField, "cell 1 0,growx");
 		textField.setColumns(3);
-		
+
 		slider = new JSlider();
 		slider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {

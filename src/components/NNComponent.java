@@ -11,6 +11,7 @@ import components.base.ProcessInfo;
 public class NNComponent extends Component {
 
 	public NNComponent(){
+		super();
 		setTitle("Neural Net");
 	}
 	

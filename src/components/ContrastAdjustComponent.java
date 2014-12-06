@@ -14,6 +14,7 @@ import components.base.ProcessInfo;
 public class ContrastAdjustComponent extends Component {
 
 	public ContrastAdjustComponent(){
+		super();
 		this.setTitle("Contrast Adj.");
 	}
 	

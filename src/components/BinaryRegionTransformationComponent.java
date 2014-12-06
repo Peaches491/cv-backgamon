@@ -23,7 +23,7 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 
 @SuppressWarnings("serial")
-public class BinaryRegionTransformationComponent extends Component implements ItemListener, ChangeListener {
+public class BinaryRegionTransformationComponent extends Component implements ChangeListener, ItemListener {
 	
 	public enum Shape {
 		CIRCLE,
@@ -39,6 +39,8 @@ public class BinaryRegionTransformationComponent extends Component implements It
 	private JLabel lblKernelShape;
 	
 	public BinaryRegionTransformationComponent(int dilateSize, int erodeSize, Shape kernelShape, boolean setOpening) {
+		super();
+		
 		setTitle("Binary Operations");
 		setLayout(new MigLayout("fill", "[][grow,fill]", "[][][][]"));
 		

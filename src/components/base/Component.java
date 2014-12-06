@@ -118,5 +118,4 @@ public abstract class Component extends JPanel{
 	public void setManager(ComponentManager componentManager) {
 		this.componentManager = componentManager;
 	}
-
 }

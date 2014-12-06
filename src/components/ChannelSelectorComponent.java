@@ -45,6 +45,7 @@ public class ChannelSelectorComponent extends Component implements ChangeListene
 	private JSlider redWeightSlider;
 	
 	public ChannelSelectorComponent(double initRed, double initGreen, double initBlue){
+		super();
 		this.setLayout(new MigLayout("fill", "[right][grow,fill][shrink 0]", "[][][]"));
 		
 		this.setTitle("Channel Select");
@@ -128,6 +129,5 @@ public class ChannelSelectorComponent extends Component implements ChangeListene
 		greenWeightField.setText("" + greenWeightSlider.getValue());
 		blueWeightField.setText("" + blueWeightSlider.getValue());
 		this.notifyChange();
-		
 	}
 }
