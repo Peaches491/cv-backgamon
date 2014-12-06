@@ -163,6 +163,7 @@ public class BoundingBoxComponent extends Component implements ChangeListener {
 		TreeMap<Double, ArrayList<Point>> regions = (TreeMap<Double, ArrayList<Point>>) componentManager.getRegistryData("REGION_SET");
 		
 		ArrayList<Region> regionBounds = new ArrayList<Region>(regions.size());
+		
 		for(Entry<Double, ArrayList<Point>> e : regions.entrySet()){
 			if(e.getValue().size() < (int)spinnerMinPixels.getValue()) continue;
 			if(e.getValue().size() > (int)spinnerMaxPixels.getValue()) continue;
@@ -173,6 +174,9 @@ public class BoundingBoxComponent extends Component implements ChangeListener {
 				r.updateValues(p.x, p.y);
 				r.increment();
 			}
+			
+			System.out.println(r);
+			
 			Dimension dim = r.getDimension();
 			double aspect;
 			if(dim.height == 0){

@@ -41,7 +41,8 @@ public class RegionSavingComponent extends Component {
 	private ProcessInfo info;
 	private JTextField saveField;
 	private JTextField nameField;
-	private JSpinner resampleSpinner;
+	private JTextField resampleSpinner;
+	private int currentRes;
 	
 	public RegionSavingComponent(int padding, int res) {
 		setTitle("RegionSaving");
@@ -91,8 +92,7 @@ public class RegionSavingComponent extends Component {
 		JLabel lblResampleSize = new JLabel("Resample Size");
 		add(lblResampleSize, "cell 0 2");
 		
-		resampleSpinner = new JSpinner();
-		resampleSpinner.setModel(new SpinnerNumberModel(new Integer(res), new Integer(1), null, new Integer(1)));
+		resampleSpinner = new JTextField();
 		add(resampleSpinner, "cell 1 2 3 1,growx");
 		
 		JLabel lblSavePath = new JLabel("Folder");
@@ -150,7 +150,11 @@ public class RegionSavingComponent extends Component {
 
 	@SuppressWarnings("unchecked")
 	private Region selectedRegion() {
-		return ((ArrayList<Region>) componentManager.getRegistryData("REGION_OBJS")).get(regionNumber);
+		if(((ArrayList<Region>) componentManager.getRegistryData("REGION_OBJS")).size() > regionNumber) {
+			return ((ArrayList<Region>) componentManager.getRegistryData("REGION_OBJS")).get(regionNumber);
+		} else {
+			return null;
+		}
 	}
 
 	@Override
@@ -162,8 +166,10 @@ public class RegionSavingComponent extends Component {
 		Rect r = getSelectedRect();
 		
 		saveField.setText(info.getActiveDirectory());
-		nameField.setText((Integer)resampleSpinner.getValue() + "-" + info.getFileName());
+		nameField.setText(info.getFileName());
 		
+		
+		if(r == null) return;
 		Core.putText(info.getOverlayMat(), "" + r.size(),  
 				r.tl(), Core.FONT_HERSHEY_DUPLEX, 0.5,  new Scalar(255, 255, 255), 1, Core.LINE_AA, false);
 		Core.rectangle(info.getOverlayMat(), r.tl(), r.br(), squareColor);
@@ -174,6 +180,7 @@ public class RegionSavingComponent extends Component {
 	private Rect getSelectedRect(){
 		Region r = selectedRegion();
 		
+		if(r == null) return null;
 		Point minSq = new Point(r.getMinPoint().x, r.getMinPoint().y);
 		Point maxSq = new Point(r.getMaxPoint().x, r.getMaxPoint().y);
 		Point dist = new Point(maxSq.x-minSq.x, maxSq.y-minSq.y);
@@ -201,35 +208,69 @@ public class RegionSavingComponent extends Component {
 		return (Integer)paddingSpinner.getValue();
 	}
 
-	private static String getRegionFolder(String path){
-		System.out.println("getRegionFolder: " + path);
-		return path + "\\regions";
+	private String getRegionFolder(String path){
+		String val = path + "\\regions\\" + currentRes + "\\";
+		System.out.println("getRegionFolder: " + val);
+		return val;
 	}
-
-	public void save() {
-		Integer w = (Integer)resampleSpinner.getValue();
-		Rect r = getSelectedRect();
+	
+	public void save(){
+		save(false);
+	}
+	
+	public void save(boolean appendNumber) {
+		String[] intStrings = resampleSpinner.getText().split("[, ]");
+		int[] intArray = new int[intStrings.length];
+		for(int i = 0; i < intStrings.length; i++) {
+		    intArray[i] = Integer.parseInt(intStrings[i]);
+		}
+		
+		for(String s : intStrings) System.out.println(s);
+		
 		Mat orig = info.getOriginalMat();
 		
-		Mat paddedOriginal = new Mat(orig.height()+2*w, orig.width()+2*w, orig.type());
-		Imgproc.copyMakeBorder(orig, paddedOriginal, w, w, w, w, Imgproc.BORDER_REPLICATE);
-		
-		r.x += w;
-		r.y += w;
-		
-		Mat roi = new Mat(paddedOriginal, r);
-//		System.out.println(roi.size());
-		File dir = new File(getRegionFolder(info.getActiveDirectory()));
-		if(!dir.exists()) dir.mkdir();
+		for(int w : intArray){
+			Rect r = getSelectedRect();
+			
+			if(r == null) return;
+			
+			currentRes = w;
+			Mat paddedOriginal = new Mat(orig.height()+2*w, orig.width()+2*w, orig.type());
+			Imgproc.copyMakeBorder(orig, paddedOriginal, w, w, w, w, Imgproc.BORDER_REPLICATE);
+			
+			r.x += w;
+			r.y += w;
+			
+			Mat roi = new Mat(paddedOriginal, r);
+	//		System.out.println(roi.size());
+			File dir = new File(getRegionFolder(info.getActiveDirectory()));
+			if(!dir.exists()) {
+				dir.getParentFile().mkdir();
+				dir.mkdir();
+			}
+	
+			Imgproc.resize(roi, roi, new Size(w, w));
+			
+			String file = dir.getAbsolutePath() + "\\" + nameField.getText();
+			if(appendNumber){
+				int split = file.lastIndexOf(".");
+				file = file.substring(0, split-1) + "-" + (regionNumber+1) + file.substring(split);
+			}
+				
+			System.out.println(file);
+			Boolean result = null;
+			result = Highgui.imwrite(file, roi);
+			System.out.println(result);
+		}
+	}
 
-		Imgproc.resize(roi, roi, new Size(w, w));
-		
-		String file = dir.getAbsolutePath() + "\\" + nameField.getText();
-		
-		System.out.println(file);
-		Boolean result = null;
-		result = Highgui.imwrite(file, roi);
-		System.out.println(result);
+	public void saveAll() {
+		regionNumber = 0;
+		this.revalidate();
+		for(int i = 0; i < getRegions().size(); i++){
+			save(true);
+			incrementRegion();
+		}
 	}
 
 }

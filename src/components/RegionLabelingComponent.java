@@ -6,14 +6,18 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
 import components.base.Component;
@@ -51,7 +55,8 @@ public class RegionLabelingComponent extends Component {
 	
 	@Override
 	public void applyComponent(Mat inputMat, ProcessInfo info) {
-		reset(inputMat);
+		boolean newMethod = true;
+		reset(inputMat, newMethod);
 		
 //		Imgproc.cvtColor(inputMat, inputMat, Imgproc.COLOR_BGR2GRAY);
 		Imgproc.threshold(inputMat, inputMat, 0, 1, Imgproc.THRESH_BINARY);
@@ -59,68 +64,118 @@ public class RegionLabelingComponent extends Component {
 		double width = labelMat.size().width;
 		double height = labelMat.size().height;
 		
-		for(int y = 0; y < height; y++){
-			for(int x = 0; x < width; x++){
-				double[] intVec= inputMat.get(y, x);
-				if(intVec[0] == unlabledLabel ||
-				   intVec[1] == unlabledLabel ||
-				   intVec[2] == unlabledLabel) {
-//				if(intVec[0] == unlabledLabel) {
-					double l = updateCurrentLabel(inputMat, labelMat, x, y);
-					labelMat.put(y, x, new double[] {l, l, l});
+		TreeMap<Double, ArrayList<Point>> regionSet = new TreeMap<Double, ArrayList<Point>>();
+	
+//		newMethod = false;
+		if(!newMethod){
+			for(int y = 0; y < height; y++){
+				for(int x = 0; x < width; x++){
+					double[] intVec= inputMat.get(y, x);
+					if(intVec[0] == unlabledLabel ||
+					   intVec[1] == unlabledLabel ||
+					   intVec[2] == unlabledLabel) {
+	//				if(intVec[0] == unlabledLabel) {
+						double l = updateCurrentLabel(inputMat, labelMat, x, y);
+						labelMat.put(y, x, new double[] {l, l, l});
+					}
 				}
 			}
-		}
-		
-		TreeMap<Double, Double> collisionRepair = collapseCollisions(labelMat);
-		TreeMap<Double, ArrayList<Point>> regionSet = new TreeMap<Double, ArrayList<Point>>();
-		
-		for(int y = 0; y < height; y++){
-			for(int x = 0; x < width; x++){
-				double[] intVec= labelMat.get(y, x);
-				if(intVec[0] == 0.0) continue;
-				
-				Double newVal = collisionRepair.get(intVec[0]);
-				
-				if(newVal == null) newVal = intVec[0];
-				
-//				if(orderedReplacementMap.containsKey(newVal)){
-//					newVal = orderedReplacementMap.get(newVal);
-//				}
-				
-				labelMat.put(y, x, new double[] {newVal, newVal, newVal});
-				if(!regionSet.containsKey(newVal)) 
-					regionSet.put(newVal, new ArrayList<Point>());
-				regionSet.get(newVal).add(new Point(x, y));
+			
+			TreeMap<Double, Double> collisionRepair = collapseCollisions(labelMat);
+			
+			for(int y = 0; y < height; y++){
+				for(int x = 0; x < width; x++){
+					double[] intVec= labelMat.get(y, x);
+					if(intVec[0] == 0.0) continue;
+					
+					Double newVal = collisionRepair.get(intVec[0]);
+					
+					if(newVal == null) newVal = intVec[0];
+					
+	//				if(orderedReplacementMap.containsKey(newVal)){
+	//					newVal = orderedReplacementMap.get(newVal);
+	//				}
+					
+					labelMat.put(y, x, new double[] {newVal, newVal, newVal});
+					if(!regionSet.containsKey(newVal)) 
+						regionSet.put(newVal, new ArrayList<Point>());
+					regionSet.get(newVal).add(new Point(x, y));
+				}
 			}
-		}
-		
-		int idx = 1;
-		Map<Double, Double> finalRegionMap = new HashMap<Double, Double>(regionSet.size());
-		for(Double e : regionSet.keySet()){
-			finalRegionMap.put(e, (double) idx);
-			idx++;
-		}
-		
-		
-		for(int y = 0; y < height; y++){
-			for(int x = 0; x < width; x++){
-				double[] intVec= labelMat.get(y, x);
-				if(intVec[0] == 0.0) continue;
-				
-				Double newVal = finalRegionMap.get(intVec[0]);
+			
+			int idx = 1;
+			Map<Double, Double> finalRegionMap = new HashMap<Double, Double>(regionSet.size());
+			for(Double e : regionSet.keySet()){
+				finalRegionMap.put(e, (double) idx);
+				idx++;
+			}
+			
+			
+			for(int y = 0; y < height; y++){
+				for(int x = 0; x < width; x++){
+					double[] intVec= labelMat.get(y, x);
+					if(intVec[0] == 0.0) continue;
+					
+					Double newVal = finalRegionMap.get(intVec[0]);
+	
+	//				labelMat.put(y, x, new double[] {newVal, newVal, newVal});
+	//				if(regionSet.containsKey(intVec[0])) {
+	//					if(intVec[0] != newVal){
+	//						regionSet.put(newVal, regionSet.get(intVec[0]));
+	//						regionSet.remove(intVec[0]);
+	//					}
+	//				}
+				}
+			}
+			
+			labelMat.assignTo(inputMat);
+		} else {
+			
+//			inputMat.assignTo(labelMat);
 
-//				labelMat.put(y, x, new double[] {newVal, newVal, newVal});
-//				if(regionSet.containsKey(intVec[0])) {
-//					if(intVec[0] != newVal){
-//						regionSet.put(newVal, regionSet.get(intVec[0]));
-//						regionSet.remove(intVec[0]);
-//					}
-//				}
-			}
+			Mat mask = Mat.zeros(labelMat.rows()+2, labelMat.cols()+2, CvType.CV_8UC(1));
+			
+			int label_count = 2; // starts at 2 because 0,1 are used already
+            
+		    for(int y = 0; y < labelMat.height(); y++) {
+		        for(int x=0; x < labelMat.width(); x++) {
+//		        	System.out.println(labelMat.get(y, x)[0]);
+		            if(inputMat.get(y, x)[0] != 1) {
+		                continue;
+		            }
+		            
+
+		            ArrayList<Point> blob = new ArrayList<Point>();
+
+		            Rect rect = new Rect();
+		            Imgproc.floodFill(inputMat, mask, new org.opencv.core.Point(x, y), new Scalar(label_count), rect, new Scalar(0), new Scalar(0), Imgproc.FLOODFILL_FIXED_RANGE);
+
+		            for(int i=rect.y; i < (rect.y+rect.height); i++) {
+		                for(int j=rect.x; j < (rect.x+rect.width); j++) {
+		                    if(inputMat.get(i, j)[0] != label_count) {
+		                        continue;
+		                    }
+
+		                    blob.add(new Point(j,i));
+		                }
+		            }
+
+		            regionSet.put(label_count + 0.0, blob);
+
+		            label_count++;
+		            
+		            
+		        }
+		    }
+		    List<Mat> channel = new ArrayList<Mat>(3);
+            Core.split(inputMat, channel);
+            channel.set(1, channel.get(0));
+            channel.set(2, channel.get(0));
+            
+            Core.merge(channel, inputMat);
 		}
-		
-		labelMat.assignTo(inputMat);
+			
+		System.out.println("Setting Regions: " + regionSet.size());
 		componentManager.setRegistryData("REGION_SET", regionSet);
 		textField.setText("" + regionSet.size());
 	}
@@ -191,9 +246,11 @@ public class RegionLabelingComponent extends Component {
 		return neighbors.get(0);
 	}
 
-	private void reset(Mat srcMat) {
+	private void reset(Mat srcMat, boolean newMethod) {
+		int offset = 0;
+//		if(newMethod) offset  = 2;
 		currentLabel = 1;
-		labelMat = Mat.zeros(srcMat.rows(), srcMat.cols(), srcMat.type());
+		labelMat = Mat.zeros(srcMat.rows()+offset, srcMat.cols()+offset, srcMat.type());
 		collisionMap.clear();
 		orderedReplacementMap.clear();
 	}

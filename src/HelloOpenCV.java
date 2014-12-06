@@ -140,11 +140,13 @@ public class HelloOpenCV {
 			// compManager.addComponent(new NNComponent());
 			final RegionSavingComponent saver = new RegionSavingComponent(5, 64);
 			compManager.addComponent(saver);
+			
 			rootPanel.getControllerPanel().setRunAction(new Runnable(){
 				@Override
 				public void run() {
 					while(rootPanel.hasNextFile()){
-						saver.save();
+						if(rootPanel.getControllerPanel().saveAllSelected()) saver.saveAll();
+						else saver.save();
 						rootPanel.selectNextFile();
 						try {
 							Thread.sleep(50);
@@ -156,6 +158,7 @@ public class HelloOpenCV {
 					saver.save();
 				}
 			});
+			
 		} else if(cmd.getOptionValue("m").equals("DICE-SEGMENT")) {
 			compManager.addComponent(new WarpAffineComponent());
 			compManager.addComponent(new WarpPerspectiveComponent());

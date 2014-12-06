@@ -74,7 +74,7 @@ public class EditorRootPanel extends JPanel implements ChangeListener {
 	public EditorRootPanel(String fileDirectory){
 		super();
 		
-		setLayout(new MigLayout("fill, hidemode 3", "[400px!,grow,fill][][(pref)!,fill]", "[grow][][grow]"));
+		setLayout(new MigLayout("fill, hidemode 3", "[400px!,grow,fill][][(pref)!,fill]", "[grow][][]"));
 		
 		TreeModel model = new FileTreeModel(new File(fileDirectory));
 		
@@ -110,7 +110,7 @@ public class EditorRootPanel extends JPanel implements ChangeListener {
 		});
 		
 		viewTabs = new JTabbedPane(JTabbedPane.TOP);
-		add(viewTabs, "cell 1 0 1 2,grow");
+		add(viewTabs, "cell 1 0 1 3,grow");
 		
 		outputViewPanel = new ImagePanel();
 		viewTabs.addTab("Output", null, outputViewPanel, null);
@@ -120,7 +120,7 @@ public class EditorRootPanel extends JPanel implements ChangeListener {
 		scrollPane = new JScrollPane();
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		add(scrollPane, "cell 2 0 1 2,grow");
+		add(scrollPane, "cell 2 0 1 3,grow");
 		
 		componentsPanel = new JPanel();
 		scrollPane.setViewportView(componentsPanel);
@@ -155,7 +155,8 @@ public class EditorRootPanel extends JPanel implements ChangeListener {
 		tableScrollPane.setViewportView(table);
 		
 		controllerPanel = new ControllerPanel();
-		add(controllerPanel, "cell 0 2,grow");
+		controllerPanel.setVisible(false);
+		add(controllerPanel, "cell 0 2,grow, hidemode 3");
 		tableScrollPane.setVisible(false);
 		
 		imgInfo = new ProcessInfo(fileDirectory, "", fileDirectory, null, null);
@@ -245,5 +246,8 @@ public class EditorRootPanel extends JPanel implements ChangeListener {
 
 	public boolean hasNextFile() {
 		return tableModel.getRowCount()-1 != table.getSelectedRow();
+	}
+	public void setControllerPanelVisible(boolean viz){
+		controllerPanel.setVisible(viz);
 	}
 }
