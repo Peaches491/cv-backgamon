@@ -218,8 +218,9 @@ public class NNComponent extends Component {
 				
 				Core.putText(info.getOverlayMat(), ""+diceVal, reg.getMinPoint(), Core.FONT_HERSHEY_DUPLEX, 0.8, 
 						new Scalar(255, 255, 255), 1, Core.LINE_AA, false);
-		
 			}
+		} else {
+			setError("Network has not been trained!");
 		}
 	}
 
