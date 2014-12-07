@@ -250,4 +250,7 @@ public class EditorRootPanel extends JPanel implements ChangeListener {
 	public void setControllerPanelVisible(boolean viz){
 		controllerPanel.setVisible(viz);
 	}
+	public void scrollToComponent(Component comp){
+		scrollPane.scrollRectToVisible(comp.getControlPanel().getBounds());
+	}
 }

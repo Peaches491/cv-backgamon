@@ -18,6 +18,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JToggleButton;
 
 import net.miginfocom.swing.MigLayout;
+import java.awt.Color;
 
 @SuppressWarnings("serial")
 public abstract class Component extends JPanel{
@@ -30,6 +31,7 @@ public abstract class Component extends JPanel{
 	private JToggleButton btnEnable;
 	private JCheckBox chckBoxVisualize;
 	protected ComponentManager componentManager;
+	private JLabel errorLabel;
 	
 	public Component(){
 		this.titleLabel.setText("<Untitled Component>");
@@ -41,7 +43,7 @@ public abstract class Component extends JPanel{
 
 		enablePanel = new JPanel();
 		containerPanel.add(enablePanel, BorderLayout.SOUTH);
-		enablePanel.setLayout(new MigLayout("fill", "[fill, grow][]", "[]"));
+		enablePanel.setLayout(new MigLayout("fill, hidemode 3", "[grow,fill][]", "[][]"));
 		
 		btnEnable = new JToggleButton("Enabled");
 		btnEnable.addItemListener(new ItemListener() {
@@ -55,8 +57,14 @@ public abstract class Component extends JPanel{
 				notifyChange();
 			}
 		});
+		
+		errorLabel = new JLabel("");
+		errorLabel.setVisible(false);
+		errorLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
+		errorLabel.setForeground(Color.RED);
+		enablePanel.add(errorLabel, "cell 0 0 2 1");
 		btnEnable.setSelected(true);
-		enablePanel.add(btnEnable, "cell 0 0,alignx left,aligny top");
+		enablePanel.add(btnEnable, "cell 0 1,alignx left,aligny top");
 		
 		chckBoxVisualize = new JCheckBox("Visualize");
 		chckBoxVisualize.addItemListener(new ItemListener() {
@@ -65,7 +73,7 @@ public abstract class Component extends JPanel{
 				notifyChange();
 			}
 		});
-		enablePanel.add(chckBoxVisualize, "cell 1 0,alignx left,aligny top");
+		enablePanel.add(chckBoxVisualize, "cell 1 1,alignx left,aligny top");
 		
 	}
 
@@ -117,5 +125,16 @@ public abstract class Component extends JPanel{
 
 	public void setManager(ComponentManager componentManager) {
 		this.componentManager = componentManager;
+	}
+
+	protected void setError(String string) {
+		if(string == null || string.isEmpty()) {
+			errorLabel.setText("");
+			errorLabel.setVisible(false);
+		} else {
+			errorLabel.setText(string);
+			errorLabel.setVisible(true);
+		}
+		repaint();
 	}
 }

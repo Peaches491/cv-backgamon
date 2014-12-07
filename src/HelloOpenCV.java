@@ -2,6 +2,7 @@ import java.io.File;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -19,6 +20,7 @@ import components.BinaryRegionTransformationComponent.Shape;
 import components.BoundingBoxComponent;
 import components.ChannelSelectorComponent;
 import components.ContrastAdjustComponent;
+import components.NNComponent;
 import components.RegionLabelingComponent;
 import components.RegionSavingComponent;
 import components.ThresholdComponent;
@@ -117,7 +119,7 @@ public class HelloOpenCV {
 		// Load the native library.
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
-		ComponentManager compManager = new ComponentManager();
+		final ComponentManager compManager = new ComponentManager();
 
 		final EditorRootPanel rootPanel = new EditorRootPanel(img, compManager,
 				dir.getAbsolutePath());
@@ -127,7 +129,7 @@ public class HelloOpenCV {
 			helpAndExit(opt);
 		}
 		System.out.println("MODE VALUE: " + cmd.getOptionValue("m"));
-		if(cmd.getOptionValue("m").equals("DICE-SEGMENT")) {
+		if(cmd.getOptionValue("m").contains("DICE")) {
 			compManager.addComponent(new ChannelSelectorComponent(1.0, 0.0, 0.1));
 
 			compManager.addComponent(new ThresholdComponent(132));
@@ -136,30 +138,35 @@ public class HelloOpenCV {
 			compManager.addComponent(new BoundingBoxComponent(0.5, 1.0, 550, 10000,
 					450, 10000, 0.25, 1.6));
 			compManager.addComponent(new ContrastAdjustComponent());
-			// compManager.addComponent(new TrainImageSaverComponent());
-			// compManager.addComponent(new NNComponent());
-			final RegionSavingComponent saver = new RegionSavingComponent(5, 64);
-			compManager.addComponent(saver);
 			
-			rootPanel.getControllerPanel().setRunAction(new Runnable(){
-				@Override
-				public void run() {
-					while(rootPanel.hasNextFile()){
-						if(rootPanel.getControllerPanel().saveAllSelected()) saver.saveAll();
-						else saver.save();
-						rootPanel.selectNextFile();
-						try {
-							Thread.sleep(50);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+			if(cmd.getOptionValue("m").contains("TEST")) {
+				compManager.addComponent(new NNComponent());
+			}
+			
+			if(cmd.getOptionValue("m").contains("SEGMENT")){
+				final RegionSavingComponent saver = new RegionSavingComponent(5, 64);
+				compManager.addComponent(saver);
+				
+				rootPanel.getControllerPanel().setRunAction(new Runnable(){
+					@Override
+					public void run() {
+						while(rootPanel.hasNextFile()){
+							if(rootPanel.getControllerPanel().saveAllSelected()) saver.saveAll();
+							else saver.save();
+							rootPanel.selectNextFile();
+							try {
+								Thread.sleep(50);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 						}
+						saver.save();
 					}
-					saver.save();
-				}
-			});
-			
-		} else if(cmd.getOptionValue("m").equals("DICE-SEGMENT")) {
+				});
+				rootPanel.setControllerPanelVisible(true);
+			}
+		} else if(cmd.getOptionValue("m").equals("BOARD")) {
 			compManager.addComponent(new WarpAffineComponent());
 			compManager.addComponent(new WarpPerspectiveComponent());
 		}
@@ -175,5 +182,13 @@ public class HelloOpenCV {
 		frame2.setVisible(true);
 
 		frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				rootPanel.scrollToComponent(compManager.getComponents().getLast());
+			}
+		});
 	}
 }

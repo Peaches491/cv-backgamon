@@ -23,7 +23,7 @@ public class ComponentManager {
 //		components.getLast().setVisualize(true);
 	}
 
-	public Collection<Component> getComponents() {
+	public LinkedList<Component> getComponents() {
 		return components;
 	}
 

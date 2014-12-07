@@ -34,8 +34,9 @@ public class DiceClassifier {
 		
 	/**
 	 * Loads images from file and converts them to training samples 
+	 * @return 
 	 */
-	public void loadSamples(){
+	public boolean loadSamples(){
 		File sampleDir = null;
 		File[] dirListing = null;
 		Mat sample;
@@ -66,6 +67,7 @@ public class DiceClassifier {
 			sampleDir = new File(dir.getAbsolutePath() + "/" + dieValue
 					+ "/regions/" + regSize);
 			dirListing = sampleDir.listFiles();
+			System.out.println(sampleDir);
 
 			if (dirListing != null) {
 				for (File img : dirListing) {
@@ -82,10 +84,14 @@ public class DiceClassifier {
 						outputs.push_back(out[dieValue-1].clone());
 					}
 				}
+			} else {
+				System.err.println("Sample die images missing value = " + dieValue);
+				return false;
 			}
 		}
 		//inputs must be Floating point for ANN training 
 		inputs.convertTo(inputs, CvType.CV_32FC1);
+		return true;
 	}
 	
 	private Mat buildLayerMat(){
@@ -111,7 +117,10 @@ public class DiceClassifier {
 	public int classify(Mat m){
 		if(trained){
 			m = m.reshape(1,1);
-			Mat classifications = new Mat(0,0,CvType.CV_32FC1); 
+			System.out.println(m);
+			Mat classifications = new Mat(m.rows(),m.cols(),CvType.CV_32FC1); 
+			System.out.println(classifications);
+			System.out.println(inputs);
 			ann.predict(m, classifications);
 			
 			double val = -10;
@@ -170,12 +179,12 @@ public class DiceClassifier {
 		default:
 			break;
 		}
-		DiceClassifier dc = new DiceClassifier(directory, 16, new int[]{20});
+		DiceClassifier dc = new DiceClassifier(directory, 16, new int[]{20, 15});
 		dc.loadSamples();
 		dc.train();
 		
-		System.out.println(dc.classify(dc.inputs.row(160)));
-		System.out.println(dc.classifyRaw(dc.inputs.row(160)).dump());
+		System.out.println(dc.classify(dc.inputs.row(10)));
+		System.out.println(dc.classifyRaw(dc.inputs.row(10)).dump());
 		
 	} 
 
