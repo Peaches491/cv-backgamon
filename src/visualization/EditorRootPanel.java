@@ -143,6 +143,7 @@ public class EditorRootPanel extends JPanel implements ChangeListener {
 			public void valueChanged(ListSelectionEvent e) {
 				if(!e.getValueIsAdjusting()) {
 					MetaFile mfile = tableModel.getMetaFile(table.getSelectedRow());
+					if (mfile == null) return;
 					File node = mfile.getFile();
 				    if(node != null && node.isFile()) {
 				    	EditorRootPanel.this.setImageFile(node);
@@ -199,6 +200,7 @@ public class EditorRootPanel extends JPanel implements ChangeListener {
 			Mat overlayMat = new Mat(imageMat.height(), imageMat.width(), imageMat.type());
 			imgInfo.setOverlayMat(overlayMat);
 			imgInfo.setOriginalMat(imageMat);
+			if(imgInfo.getMetaFile() != null)imgInfo.getMetaFile().clearMetadata();
 
 			for(Component comp : compManager.getComponents()){
 				if(comp.isApplyEnabled()){
