@@ -38,6 +38,7 @@ import javax.swing.JComboBox;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListDataListener;
+import javax.swing.SpinnerNumberModel;
 
 public class NNComponent extends Component {
 	private JTextField directoryField;
@@ -102,6 +103,7 @@ public class NNComponent extends Component {
 		add(lblPadding, "cell 0 2");
 		
 		paddingSpinner = new JSpinner();
+		paddingSpinner.setModel(new SpinnerNumberModel(new Integer(5), new Integer(0), null, new Integer(1)));
 		add(paddingSpinner, "cell 1 2");
 		paddingSpinner.addChangeListener(new ChangeListener() {
 			@Override
@@ -135,6 +137,8 @@ public class NNComponent extends Component {
 				NNComponent.this.settingsChanged();
 			}
 		});
+		
+		settingsChanged();
 	}
 	
 	protected void settingsChanged() {
@@ -193,7 +197,8 @@ public class NNComponent extends Component {
 		Integer paddingSize = (Integer)paddingSpinner.getValue();
 		
 		if(dc != null){
-			for(Region reg : regions ){
+			for(int i = 0; i < regions.size(); i++) {
+				Region reg = regions.get(i);
 				if(reg == null) return;
 				
 				Mat paddedOriginal = new Mat(orig.height()+2*paddingSize, orig.width()+2*paddingSize, orig.type());
@@ -215,6 +220,10 @@ public class NNComponent extends Component {
 				setError("");
 				
 				System.out.println("" + reg.getMaxPoint());
+				
+				if(info.getMetaFile() != null) {
+					System.out.println(info.getMetaFile().setRegionClassification(i, diceVal));
+				}
 				
 				Core.putText(info.getOverlayMat(), ""+diceVal, reg.getMinPoint(), Core.FONT_HERSHEY_DUPLEX, 0.8, 
 						new Scalar(255, 255, 255), 1, Core.LINE_AA, false);

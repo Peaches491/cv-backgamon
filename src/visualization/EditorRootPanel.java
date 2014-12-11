@@ -12,6 +12,7 @@ import components.base.ComponentManager;
 import components.base.ProcessInfo;
 import controller.ControllerPanel;
 import files.FileTreeModel;
+import files.MetaFile;
 import files.RegionCountingTableModel;
 import net.miginfocom.swing.MigLayout;
 
@@ -141,7 +142,8 @@ public class EditorRootPanel extends JPanel implements ChangeListener {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				if(!e.getValueIsAdjusting()) {
-					File node = tableModel.getFile(table.getSelectedRow());
+					MetaFile mfile = tableModel.getMetaFile(table.getSelectedRow());
+					File node = mfile.getFile();
 				    if(node != null && node.isFile()) {
 				    	EditorRootPanel.this.setImageFile(node);
 				    	EditorRootPanel.this.selectedFile = node;
@@ -177,6 +179,7 @@ public class EditorRootPanel extends JPanel implements ChangeListener {
 			outputViewPanel.setMat(displayMat);
 			imgInfo.setActiveDirectory(picFile.getParentFile().getAbsolutePath());
 			imgInfo.setFileName(picFile.getName());
+			imgInfo.setMetaFile(tableModel.getMetaFile(table.getSelectedRow()));
 			stateChanged(null);
 		}
 	}

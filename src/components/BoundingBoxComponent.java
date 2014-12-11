@@ -202,6 +202,10 @@ public class BoundingBoxComponent extends Component implements ChangeListener {
 //			Core.putText(info.getOverlayMat(), ""+r.pixelCount, r.getMaxPoint(), Core.FONT_HERSHEY_DUPLEX, 0.5, 
 //					new Scalar(255, 255, 255), 1, Core.LINE_AA, false);
 		}
+		if(info.getMetaFile() != null) {
+			info.getMetaFile().clearRegions();
+			info.getMetaFile().setRegionNumber(regionBounds.size());
+		}
 		
 		componentManager.setRegistryData("REGION_OBJS", regionBounds);
 		

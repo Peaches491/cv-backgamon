@@ -2,12 +2,15 @@ package components.base;
 
 import org.opencv.core.Mat;
 
+import files.MetaFile;
+
 public class ProcessInfo {
 	private String filePath;
 	private String fileName;
 	private String activeDirectory;
 	private Mat overlayMat;
 	private Mat originalMat;
+	private MetaFile metaFile;
 	
 	public ProcessInfo(String _filePath, String _fileName, String _activeDirectory, Mat _overlayMat, Mat _originalMat) {
 		this.filePath = _filePath;
@@ -55,5 +58,13 @@ public class ProcessInfo {
 
 	public void setOriginalMat(Mat originalMat) {
 		this.originalMat = originalMat;
+	}
+	
+	public MetaFile getMetaFile(){
+		return metaFile;
+	}
+
+	public void setMetaFile(MetaFile metaFile) {
+		this.metaFile = metaFile;
 	}
 }

@@ -10,13 +10,11 @@ import javax.swing.table.TableModel;
 
 public class RegionCountingTableModel extends AbstractTableModel {
 
-	String titles[] = new String[] { "File Name", "# Regions" };
+	String titles[] = new String[] { "File Name", "# Regions", "Region Values"};
 
-	Class types[] = new Class[] { String.class, Integer.class };
+	Class types[] = new Class[] { String.class, Integer.class, String.class };
 
-	Object data[][];
-
-	private File[] files;
+	private MetaFile[] files;
 
 	public RegionCountingTableModel() {
 		this(".");
@@ -31,7 +29,7 @@ public class RegionCountingTableModel extends AbstractTableModel {
 	// in. Only getRowCount(), getColumnCount() and getValueAt() are
 	// required. The other methods tailor the look of the table.
 	public int getRowCount() {
-		return data.length;
+		return files.length;
 	}
 
 	public int getColumnCount() {
@@ -47,7 +45,17 @@ public class RegionCountingTableModel extends AbstractTableModel {
 	}
 
 	public Object getValueAt(int r, int c) {
-		return data[r][c];
+		switch (c) {
+		case 0:
+			return files[r].getFile();
+		case 1:
+			return files[r].getRegionCount();
+		case 2:
+			return files[r].getRegionString();
+
+		default:
+			return null;
+		}
 	}
 
 	// Our own method for setting/changing the current directory
@@ -58,19 +66,15 @@ public class RegionCountingTableModel extends AbstractTableModel {
 		System.out.println(dir);
 		String files[] = dir.list();
 		if(files == null){
-			data = new Object[0][0];
-			this.files = new File[0];
+			this.files = new MetaFile[0];
 			fireTableDataChanged();
 			return;
 		}
-		data = new Object[files.length][titles.length];
-		this.files = new File[files.length];
+		this.files = new MetaFile[files.length];
 		
 		for (int i = 0; i < files.length; i++) {
 			File tmp = new File(dir.getAbsolutePath() + "\\" + files[i]);
-			data[i][0] = tmp.getName();
-			data[i][1] = 0;
-			this.files[i] = tmp;
+			this.files[i] = new MetaFile(tmp);
 		}
 
 		// Just in case anyone's listening...
@@ -78,6 +82,14 @@ public class RegionCountingTableModel extends AbstractTableModel {
 	}
 
 	public File getFile(int selectedRow) {
+		try {
+			return this.files[selectedRow].getFile();
+		} catch(IndexOutOfBoundsException e) {
+			return null;
+		}
+	}
+	
+	public MetaFile getMetaFile(int selectedRow) {
 		try {
 			return this.files[selectedRow];
 		} catch(IndexOutOfBoundsException e) {
