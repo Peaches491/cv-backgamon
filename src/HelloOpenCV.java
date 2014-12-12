@@ -18,6 +18,8 @@ import org.opencv.core.Core;
 import components.BinaryRegionTransformationComponent;
 import components.BinaryRegionTransformationComponent.Shape;
 import components.BoundingBoxComponent;
+import components.CalibrateChessBoard;
+import components.CalibrateSolvePnP;
 import components.ChannelSelectorComponent;
 import components.ContrastAdjustComponent;
 import components.NNComponent;
