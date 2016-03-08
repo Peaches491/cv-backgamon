@@ -50,7 +50,7 @@ import javax.swing.ListSelectionModel;
 
 @SuppressWarnings("serial")
 public class EditorRootPanel extends JPanel implements ChangeListener {
-	
+
 	private File selectedFile;
 	private JSlider slider;
 	private ImagePanel outputViewPanel;
@@ -68,17 +68,17 @@ public class EditorRootPanel extends JPanel implements ChangeListener {
 	private RegionCountingTableModel tableModel;
 	private ControllerPanel controllerPanel;
 
-	
+
 	/**
 	 * @wbp.parser.constructor
 	 */
 	public EditorRootPanel(String fileDirectory){
 		super();
-		
+
 		setLayout(new MigLayout("fill, hidemode 3", "[400px!,grow,fill][][(pref)!,fill]", "[grow][][]"));
-		
+
 		TreeModel model = new FileTreeModel(new File(fileDirectory));
-		
+
 		scrollPane_1 = new JScrollPane();
 		add(scrollPane_1, "cell 0 0,grow");
 		tree = new JTree(model);
@@ -90,53 +90,53 @@ public class EditorRootPanel extends JPanel implements ChangeListener {
 					int row, boolean hasFocus) {
 				JLabel label = (JLabel) super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
 				label.setText(((File) value).getName());
-				
+
 				JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 2, 0));
 				panel.add(label);
 				panel.setOpaque(false);
 				return panel;
 			}
 		});
-		
+
 		tree.addTreeSelectionListener(new TreeSelectionListener() {
 			@Override
 			public void valueChanged(TreeSelectionEvent e) {
 				File node = (File) tree.getLastSelectedPathComponent();
-			    if(node == null) return;
-			    System.out.println(node);
-			    tableScrollPane.setVisible(true);
-		    	tableModel.setFileStats(node);
-			    EditorRootPanel.this.revalidate();
+				if(node == null) return;
+				System.out.println(node);
+				tableScrollPane.setVisible(true);
+				tableModel.setFileStats(node);
+				EditorRootPanel.this.revalidate();
 			}
 		});
-		
+
 		viewTabs = new JTabbedPane(JTabbedPane.TOP);
 		add(viewTabs, "cell 1 0 1 3,grow");
-		
+
 		outputViewPanel = new ImagePanel();
 		viewTabs.addTab("Output", null, outputViewPanel, null);
 		overlayViewPanel = new ImagePanel();
 		viewTabs.addTab("Output", null, outputViewPanel, null);
-		
+
 		scrollPane = new JScrollPane();
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		add(scrollPane, "cell 2 0 1 3,grow");
-		
+
 		componentsPanel = new JPanel();
 		scrollPane.setViewportView(componentsPanel);
 		componentsPanel.setLayout(new MigLayout("fillx, flowy", "[grow, fill]", ""));
-		
+
 		JLabel lblThreshold = new JLabel("Components Panel");
 		lblThreshold.setFont(new Font("Tahoma", Font.BOLD, 12));
 		componentsPanel.add(lblThreshold);
-		
+
 		table = new JTable();
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setFillsViewportHeight(true);
 		tableModel = new RegionCountingTableModel();
 		table.setModel(tableModel);
-		
+
 		ListSelectionModel cellSelectionModel = table.getSelectionModel();
 		cellSelectionModel.addListSelectionListener(new ListSelectionListener() {
 			@Override
@@ -145,23 +145,23 @@ public class EditorRootPanel extends JPanel implements ChangeListener {
 					MetaFile mfile = tableModel.getMetaFile(table.getSelectedRow());
 					if (mfile == null) return;
 					File node = mfile.getFile();
-				    if(node != null && node.isFile()) {
-				    	EditorRootPanel.this.setImageFile(node);
-				    	EditorRootPanel.this.selectedFile = node;
-				    }
+					if(node != null && node.isFile()) {
+						EditorRootPanel.this.setImageFile(node);
+						EditorRootPanel.this.selectedFile = node;
+					}
 				}
 			}
 		});
-		
+
 		tableScrollPane = new JScrollPane();
 		add(tableScrollPane, "cell 0 1,grow");
 		tableScrollPane.setViewportView(table);
-		
+
 		controllerPanel = new ControllerPanel();
 		controllerPanel.setVisible(false);
 		add(controllerPanel, "cell 0 2,grow, hidemode 3");
 		tableScrollPane.setVisible(false);
-		
+
 		imgInfo = new ProcessInfo(fileDirectory, "", fileDirectory, null, null);
 	}
 
@@ -171,7 +171,7 @@ public class EditorRootPanel extends JPanel implements ChangeListener {
 
 		this.setImageFile(imageFile);
 	}
-	
+
 	protected void setImageFile(File picFile) {
 		if(picFile != null){
 			Mat displayMat = Highgui.imread(picFile.getAbsolutePath());
@@ -188,14 +188,14 @@ public class EditorRootPanel extends JPanel implements ChangeListener {
 	public void updateView() {
 		outputViewPanel.recalculate();
 	}
-	
+
 	public void stateChanged(ChangeEvent e) {
 		if(imageMat != null){
 			int oldIdx = viewTabs.getSelectedIndex();
 			viewTabs.removeAll();
 			viewTabs.addTab("Output", null, outputViewPanel, null);
 			viewTabs.addTab("Overlay", null, overlayViewPanel, null);
-		
+
 			Mat localMat = imageMat.clone();
 			Mat overlayMat = new Mat(imageMat.height(), imageMat.width(), imageMat.type());
 			imgInfo.setOverlayMat(overlayMat);
@@ -204,18 +204,18 @@ public class EditorRootPanel extends JPanel implements ChangeListener {
 
 			for(Component comp : compManager.getComponents()){
 				if(comp.isApplyEnabled()){
-//					System.out.print(comp.getTitle() + ": " + CvType.typeToString(localMat.type()) + " -> ");
+					//					System.out.print(comp.getTitle() + ": " + CvType.typeToString(localMat.type()) + " -> ");
 					comp.applyComponent(localMat, imgInfo);
-//					System.out.println(CvType.typeToString(localMat.type()));
+					//					System.out.println(CvType.typeToString(localMat.type()));
 					if(comp.shouldVisualize()){
 						addVisual(comp.getTitle(), localMat);
 					}
 				}
 			}
-	
+
 			Core.add(localMat, overlayMat, localMat);
 			Core.add(imageMat, overlayMat, overlayMat);
-			
+
 			outputViewPanel.setMat(localMat);
 			overlayViewPanel.setMat(overlayMat);
 			viewTabs.setSelectedIndex(Math.min(viewTabs.getTabCount()-1, oldIdx));
@@ -229,16 +229,16 @@ public class EditorRootPanel extends JPanel implements ChangeListener {
 
 	public void initialize() {
 		compManager.initialize();
-		
+
 		for(Component c : compManager.getComponents()){
 			componentsPanel.add(c.getControlPanel());
 			c.addChangeListener(this);
 		}
-		
+
 		repaint();
 		stateChanged(null);
 	}
-	
+
 	public ControllerPanel getControllerPanel(){
 		return controllerPanel;
 	}

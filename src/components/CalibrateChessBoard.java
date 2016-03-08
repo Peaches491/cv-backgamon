@@ -28,6 +28,7 @@ import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
 
 import components.base.Component;
+import components.base.ProcessInfo;
 
 /*
  * This example of camera calibration 
@@ -218,8 +219,8 @@ public class CalibrateChessBoard  extends Component {
 
 
 	@Override
-	public void applyComponent(Mat inputMat) {
-
+	public void applyComponent(Mat inputMat, ProcessInfo info) {
+	
 
 		// draw line showing 2-d pixel points
 		MatOfPoint2f matOfPoint2f;
@@ -268,4 +269,7 @@ public class CalibrateChessBoard  extends Component {
 	public Mat getDistCoeffs() {
 		return distCoeffs;
 	}
+
+
+
 }

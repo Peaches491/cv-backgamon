@@ -30,6 +30,7 @@ import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 import components.base.Component;
+import components.base.ProcessInfo;
 
 /*
  * This example of camera calibration 
@@ -411,8 +412,10 @@ public class CalibrateSolvePnP  extends Component implements ChangeListener {
 
 
 	@Override
-	public void applyComponent(Mat inputMat) {
-
+		public void applyComponent(Mat inputMat, ProcessInfo info) {
+			// TODO Auto-generated method stub
+			
+		
 		/////////////////////
 		// if the user has set the Show Axis button
 		if (checkBoxShowObjecPoints.isSelected()) {
@@ -526,4 +529,6 @@ public class CalibrateSolvePnP  extends Component implements ChangeListener {
 	public void stateChanged(ChangeEvent e) {
 		notifyChange();
 	}
+
+
 }
